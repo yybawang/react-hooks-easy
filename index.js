@@ -1,3 +1,3 @@
-export useTest = (initialValue) => {
+export const useTest = (initialValue) => {
 	
-}
+};

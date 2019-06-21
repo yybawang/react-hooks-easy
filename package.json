@@ -20,5 +20,9 @@
   "bugs": {
     "url": "https://github.com/yybawang/react-hooks-easy/issues"
   },
-  "homepage": "https://github.com/yybawang/react-hooks-easy#readme"
+  "homepage": "https://github.com/yybawang/react-hooks-easy#readme",
+  "dependencies": {
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
+  }
 }
