@@ -1,0 +1,24 @@
+{
+  "name": "react-hooks-easy",
+  "version": "1.0.0",
+  "description": "Easy use hooks and data linkage",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yybawang/react-hooks-easy.git<Paste>"
+  },
+  "keywords": [
+    "react",
+    "hooks",
+    "linkage"
+  ],
+  "author": "yybawang",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/yybawang/react-hooks-easy/issues"
+  },
+  "homepage": "https://github.com/yybawang/react-hooks-easy#readme"
+}
