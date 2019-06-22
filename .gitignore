@@ -2,6 +2,7 @@
 ### Example user template template
 ### Example user template
 .DS_Store
+mix-manifest.json
 *.log
 
 # IntelliJ project files

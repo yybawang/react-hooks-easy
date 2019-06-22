@@ -2,28 +2,28 @@ import React, {useState} from 'react'
 import {assignOne} from "../utils/assign";
 
 let booleans, setBooleans;
-export default (namespace) => {
-    // if(initialValue !== undefined){
-    //     if(typeof initialValue !== 'boolean'){
-    //         throw new Error('The initial value is not a boolean type');
-    //     }
-        [booleans, setBooleans] = useState({});
-    // }
+export default function initialStore(namespace, initialValue){
+    if(initialValue !== undefined){
+        [booleans, setBooleans] = useState(() => ({[namespace]: initialValue}));
+    }
     
-    
-    const set = (val) => {
+    function setBoolean(val){
         let temp = assignOne(booleans, namespace, val);
         setBooleans(temp);
-    };
+    }
     
-    const toggle = () => {
+    function toggleBoolean(){
         let temp = assignOne(booleans, namespace, !booleans[namespace]);
         setBooleans(temp);
-    };
+    }
+    
+    function getBoolean(){
+        return booleans[namespace];
+    }
     
     return {
-        value: booleans[namespace],
-        set,
-        toggle,
+        boolean: getBoolean(),
+        setBoolean,
+        toggleBoolean,
     };
 }

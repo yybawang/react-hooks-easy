@@ -1,28 +1,40 @@
 {
-  "name": "react-hooks-easy",
-  "version": "1.0.1",
-  "description": "Easy use hooks and data linkage",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/yybawang/react-hooks-easy.git<Paste>"
-  },
-  "keywords": [
-    "react",
-    "hooks",
-    "linkage"
-  ],
-  "author": "yybawang",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/yybawang/react-hooks-easy/issues"
-  },
-  "homepage": "https://github.com/yybawang/react-hooks-easy#readme",
-  "dependencies": {
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
-  }
+    "name": "react-hooks-easy",
+    "version": "1.0.2",
+    "description": "Easy use hooks and data linkage",
+    "main": "lib/index.js",
+    "scripts": {
+        "dev": "npm run development",
+        "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "watch": "npm run development -- --watch",
+        "watch-poll": "npm run watch -- --watch-poll",
+        "hot": "cross-env NODE_ENV=development node_modules/webpack-dev-server/bin/webpack-dev-server.js --inline --hot --config=node_modules/laravel-mix/setup/webpack.config.js",
+        "prod": "npm run production",
+        "production": "cross-env NODE_ENV=production node_modules/webpack/bin/webpack.js --no-progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/yybawang/react-hooks-easy.git<Paste>"
+    },
+    "keywords": [
+        "react",
+        "hooks",
+        "linkage"
+    ],
+    "author": "yybawang",
+    "license": "MIT",
+    "bugs": {
+        "url": "https://github.com/yybawang/react-hooks-easy/issues"
+    },
+    "homepage": "https://github.com/yybawang/react-hooks-easy#readme",
+    "dependencies": {
+        "react": "^16.8.6",
+        "react-dom": "^16.8.6"
+    },
+    "devDependencies": {
+        "@babel/preset-react": "^7.0.0",
+        "babel-plugin-import": "^1.12.0",
+        "cross-env": "^5.2.0",
+        "laravel-mix": "^4.0.16"
+    }
 }

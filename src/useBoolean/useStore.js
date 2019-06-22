@@ -1,29 +1,37 @@
-import React, {useState} from 'react'
+import React from 'react'
 import initialStore from "./initialStore";
 import {namespaceParse} from "../utils/namespaceParse";
+import {checkBoolean, checkNumber} from "../utils/checkType";
 
 export default (namespace, initialValue) => {
-    const {value, set, toggle} = initialStore(namespace);
     namespace = namespaceParse(namespace);
-    
     if(initialValue !== undefined){
-        if(typeof initialValue !== 'boolean'){
-            throw new Error('The initial value is not a boolean type');
-        }
-        setBoolean(namespace, initialValue);
+        checkBoolean(initialValue);
+    }
+    const {boolean, setBoolean, toggleBoolean} = initialStore(namespace, initialValue);
+    
+    function set(val){
+        checkBoolean(val);
+        setBoolean(val);
     }
     
-    function setBoolean(val){
-        set(val);
+    function reset(){
+        set(false);
     }
     
-    function toggleBoolean(){
-        toggle();
+    function reInitial(value){
+        set(value);
+    }
+    
+    function toggle(){
+        toggleBoolean();
     }
     
     return {
-        boolean: value,
-        setBoolean,
-        toggleBoolean,
+        value: boolean,
+        set,
+        reset,
+        reInitial,
+        toggle,
     };
 }
