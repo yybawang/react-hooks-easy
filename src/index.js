@@ -9,4 +9,4 @@ import {useObject, useMap} from './useObject/useObject'
 import {useArray, useList} from "./useArray/useArray";
 import {useString} from "./useString/useString";
 
-export default {useBoolean, useNumber, useObject, useMap, useArray, useList, useString};
+export {useBoolean, useNumber, useObject, useMap, useArray, useList, useString};
