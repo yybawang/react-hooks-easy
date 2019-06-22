@@ -2,7 +2,7 @@
     "name": "react-hooks-easy",
     "version": "1.0.6",
     "description": "Easy use hooks and data linkage",
-    "main": "lib/index.js",
+    "main": "src/index.js",
     "scripts": {
         "dev": "npm run development",
         "development": "cross-env NODE_ENV=development node_modules/webpack/bin/webpack.js --progress --hide-modules --config=node_modules/laravel-mix/setup/webpack.config.js",
