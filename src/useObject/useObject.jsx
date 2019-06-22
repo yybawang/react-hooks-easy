@@ -14,3 +14,7 @@ export function useObject(namespace, initialValue){
         splice
     }
 }
+
+export function useMap(namespace, initialValue){
+    return useObject(namespace, initialValue);
+}

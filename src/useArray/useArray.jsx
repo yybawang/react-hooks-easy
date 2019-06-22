@@ -18,3 +18,7 @@ export function useArray(namespace, initialValue){
         splice
     }
 }
+
+export function useList(namespace, initialValue) {
+    return useArray(namespace, initialValue)
+}

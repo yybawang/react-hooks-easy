@@ -3,11 +3,13 @@ import initialStore from "./initialStore";
 import {namespaceParse} from "../utils/namespaceParse";
 import {checkNumber} from "../utils/checkType";
 
+let initialValues = {};
 export default function useStore(namespace, initialValue) {
     namespace = namespaceParse(namespace);
     if(initialValue !== undefined){
         checkNumber(initialValue);
         initialValue = Number(initialValue);
+        initialValues[namespace] || (initialValues[namespace] = initialValue);
     }
     const {number, setNumber, incrementNumber, decrementNumber} = initialStore(namespace, initialValue);
     
@@ -17,7 +19,7 @@ export default function useStore(namespace, initialValue) {
     }
     
     function reset(){
-        set(0);
+        set(initialValues[namespace]);
     }
     
     function reInitial(value){

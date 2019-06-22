@@ -3,10 +3,12 @@ import initialStore from "./initialStore";
 import {namespaceParse} from "../utils/namespaceParse";
 import {checkObject, checkString} from "../utils/checkType";
 
+let initialValues = {};
 export default function useStore(namespace, initialValue){
     namespace = namespaceParse(namespace);
     if(initialValue !== undefined){
         checkObject(initialValue);
+        initialValues[namespace] || (initialValues[namespace] = initialValue);
     }
     const {object, addObject, setObject, delObject, spliceObject} = initialStore(namespace, initialValue);
     
@@ -16,7 +18,7 @@ export default function useStore(namespace, initialValue){
     }
     
     function reset(){
-        setObject({});
+        setObject(initialValues[namespace]);
     }
     
     function reInitial(values){

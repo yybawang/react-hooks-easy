@@ -24807,7 +24807,7 @@ module.exports = g;
 /*!**********************!*\
   !*** ./src/index.js ***!
   \**********************/
-/*! exports provided: useBoolean, useNumber, useObject, useArray, useString */
+/*! exports provided: useBoolean, useNumber, useObject, useMap, useArray, useList, useString */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -24821,8 +24821,12 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony import */ var _useObject_useObject__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./useObject/useObject */ "./src/useObject/useObject.jsx");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useObject", function() { return _useObject_useObject__WEBPACK_IMPORTED_MODULE_2__["useObject"]; });
 
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useMap", function() { return _useObject_useObject__WEBPACK_IMPORTED_MODULE_2__["useMap"]; });
+
 /* harmony import */ var _useArray_useArray__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./useArray/useArray */ "./src/useArray/useArray.jsx");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useArray", function() { return _useArray_useArray__WEBPACK_IMPORTED_MODULE_3__["useArray"]; });
+
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useList", function() { return _useArray_useArray__WEBPACK_IMPORTED_MODULE_3__["useList"]; });
 
 /* harmony import */ var _useString_useString__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./useString/useString */ "./src/useString/useString.jsx");
 /* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useString", function() { return _useString_useString__WEBPACK_IMPORTED_MODULE_4__["useString"]; });
@@ -24939,12 +24943,13 @@ function initialStore(namespace, initialValue) {
 /*!***********************************!*\
   !*** ./src/useArray/useArray.jsx ***!
   \***********************************/
-/*! exports provided: useArray */
+/*! exports provided: useArray, useList */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useArray", function() { return useArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useList", function() { return useList; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _useStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useStore */ "./src/useArray/useStore.js");
@@ -24975,6 +24980,9 @@ function useArray(namespace, initialValue) {
     splice: splice
   };
 }
+function useList(namespace, initialValue) {
+  return useArray(namespace, initialValue);
+}
 
 /***/ }),
 
@@ -24997,11 +25005,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var initialValues = {};
 function useStore(namespace, initialValue) {
   namespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__["namespaceParse"])(namespace);
 
   if (initialValue !== undefined) {
     Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkArray"])(initialValue);
+    initialValues[namespace] || (initialValues[namespace] = initialValue);
   }
 
   var _initialStore = Object(_initialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
@@ -25017,7 +25027,7 @@ function useStore(namespace, initialValue) {
   }
 
   function reset() {
-    setArray([]);
+    setArray(initialValues[namespace]);
   }
 
   function reInitial(values) {
@@ -25173,11 +25183,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var initialValues = {};
 /* harmony default export */ __webpack_exports__["default"] = (function (namespace, initialValue) {
   namespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__["namespaceParse"])(namespace);
 
   if (initialValue !== undefined) {
     Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkBoolean"])(initialValue);
+    initialValues[namespace] || (initialValues[namespace] = initialValue);
   }
 
   var _initialStore = Object(_initialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
@@ -25191,7 +25203,7 @@ __webpack_require__.r(__webpack_exports__);
   }
 
   function reset() {
-    set(false);
+    set(initialValues[namespace]);
   }
 
   function reInitial(value) {
@@ -25337,12 +25349,14 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var initialValues = {};
 function useStore(namespace, initialValue) {
   namespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__["namespaceParse"])(namespace);
 
   if (initialValue !== undefined) {
     Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkNumber"])(initialValue);
     initialValue = Number(initialValue);
+    initialValues[namespace] || (initialValues[namespace] = initialValue);
   }
 
   var _initialStore = Object(_initialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
@@ -25357,7 +25371,7 @@ function useStore(namespace, initialValue) {
   }
 
   function reset() {
-    set(0);
+    set(initialValues[namespace]);
   }
 
   function reInitial(value) {
@@ -25492,12 +25506,13 @@ function initialStore(namespace, initialValue) {
 /*!*************************************!*\
   !*** ./src/useObject/useObject.jsx ***!
   \*************************************/
-/*! exports provided: useObject */
+/*! exports provided: useObject, useMap */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useObject", function() { return useObject; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useMap", function() { return useMap; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
 /* harmony import */ var _useStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useStore */ "./src/useObject/useStore.js");
@@ -25523,6 +25538,9 @@ function useObject(namespace, initialValue) {
     splice: splice
   };
 }
+function useMap(namespace, initialValue) {
+  return useObject(namespace, initialValue);
+}
 
 /***/ }),
 
@@ -25545,11 +25563,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var initialValues = {};
 function useStore(namespace, initialValue) {
   namespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__["namespaceParse"])(namespace);
 
   if (initialValue !== undefined) {
     Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkObject"])(initialValue);
+    initialValues[namespace] || (initialValues[namespace] = initialValue);
   }
 
   var _initialStore = Object(_initialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
@@ -25565,7 +25585,7 @@ function useStore(namespace, initialValue) {
   }
 
   function reset() {
-    setObject({});
+    setObject(initialValues[namespace]);
   }
 
   function reInitial(values) {
@@ -25679,11 +25699,13 @@ __webpack_require__.r(__webpack_exports__);
 
 
 
+var initialValues = {};
 function useStore(namespace, initialValue) {
   namespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__["namespaceParse"])(namespace);
 
   if (initialValue !== undefined) {
     Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkString"])(initialValue);
+    initialValues[namespace] || (initialValues[namespace] = initialValue);
   }
 
   var _initialStore = Object(_initialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
@@ -25698,7 +25720,7 @@ function useStore(namespace, initialValue) {
   }
 
   function reset() {
-    setString('');
+    setString(initialValues[namespace]);
   }
 
   function append(val) {
@@ -25900,20 +25922,20 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Dom(props) {
-  // const testBoolean = useBoolean('test', false);
-  // const test = useNumber('test', 22);
-  // const test = useObject('test', {'test1': '123', 'test2': '123', 'test3': '123'});
+  var test = Object(_src_index__WEBPACK_IMPORTED_MODULE_1__["useBoolean"])('test', true); // const test = useNumber('test', 22);
+  // const test = useMap('test', {'test1': '123', 'test2': '123', 'test3': '123'});
   // const test = useArray('test', [23]);
-  var test = Object(_src_index__WEBPACK_IMPORTED_MODULE_1__["useString"])('test', '2');
+  // const test = useString('test', '2');
+
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement(_Dom2__WEBPACK_IMPORTED_MODULE_2__["default"], null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: function onClick() {
-      return test.append('sdfsdf');
+      return test.toggle();
     }
   }, "Toggle"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: function onClick() {
-      return test.set('11');
+      return test.reset();
     }
-  }, "Toggle"));
+  }, "Reset"));
 }
 
 /***/ }),
@@ -25934,7 +25956,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function Dom2(props) {
-  var test = Object(_src_index__WEBPACK_IMPORTED_MODULE_1__["useString"])('test');
+  var test = Object(_src_index__WEBPACK_IMPORTED_MODULE_1__["useBoolean"])('test');
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, JSON.stringify(test.value)));
 }
 

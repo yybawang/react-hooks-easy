@@ -3,10 +3,12 @@ import initialStore from "./initialStore";
 import {namespaceParse} from "../utils/namespaceParse";
 import {checkBoolean, checkNumber} from "../utils/checkType";
 
+let initialValues = {};
 export default (namespace, initialValue) => {
     namespace = namespaceParse(namespace);
     if(initialValue !== undefined){
         checkBoolean(initialValue);
+        initialValues[namespace] || (initialValues[namespace] = initialValue);
     }
     const {boolean, setBoolean, toggleBoolean} = initialStore(namespace, initialValue);
     
@@ -16,7 +18,7 @@ export default (namespace, initialValue) => {
     }
     
     function reset(){
-        set(false);
+        set(initialValues[namespace]);
     }
     
     function reInitial(value){

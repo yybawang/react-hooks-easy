@@ -5,8 +5,8 @@
 
 import {useBoolean} from './useBoolean/useBoolean'
 import {useNumber} from './useNumber/useNumber'
-import {useObject} from './useObject/useObject'
-import {useArray} from "./useArray/useArray";
+import {useObject, useMap} from './useObject/useObject'
+import {useArray, useList} from "./useArray/useArray";
 import {useString} from "./useString/useString";
 
-export {useBoolean, useNumber, useObject, useArray, useString};
+export {useBoolean, useNumber, useObject, useMap, useArray, useList, useString};

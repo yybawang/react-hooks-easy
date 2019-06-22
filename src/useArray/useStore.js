@@ -3,10 +3,12 @@ import initialStore from "./initialStore";
 import {namespaceParse} from "../utils/namespaceParse";
 import {checkArray, checkNumber} from "../utils/checkType";
 
+let initialValues = {};
 export default function useStore(namespace, initialValue) {
     namespace = namespaceParse(namespace);
     if(initialValue !== undefined){
         checkArray(initialValue);
+        initialValues[namespace] || (initialValues[namespace] = initialValue);
     }
     const {array, setArray, pushArray, unshiftArray, spliceArray} = initialStore(namespace, initialValue);
     
@@ -16,7 +18,7 @@ export default function useStore(namespace, initialValue) {
     }
     
     function reset(){
-        setArray([]);
+        setArray(initialValues[namespace]);
     }
     
     function reInitial(values){
