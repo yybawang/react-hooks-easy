@@ -14,33 +14,34 @@ export default function useStore(namespace, initialValue) {
     
     function add(index, val){
         checkNumber(index);
-        spliceArray(index, 1, val);
+        return spliceArray(index, 1, val);
     }
     
     function reset(){
-        setArray(initialValues[namespace]);
+        return setArray(initialValues[namespace]);
     }
     
     function reInitial(values){
         checkArray(values);
-        set(values);
+        initialValues[namespace] = values;
+        return set(values);
     }
     
     function del(index){
         checkNumber(index);
-        spliceArray(index, 1);
+        return spliceArray(index, 1);
     }
     
     function push(val){
-        pushArray(val);
+        return pushArray(val);
     }
     
     function unshift(val){
-        unshiftArray(val);
+        return unshiftArray(val);
     }
     
     function splice(index, length, ...values){
-        spliceArray(index, length, ...values);
+        return spliceArray(index, length, ...values);
     }
     
     

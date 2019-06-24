@@ -1,21 +1,24 @@
 import React, {useState} from 'react'
-import {assign, assignOne} from "../utils/assign";
+import {assignOne} from "../utils/assign";
 
-let objects, setObjects;
+let globalVar = {};
 export default function initialStore(namespace, initialValue){
     if(initialValue !== undefined){
-        [objects, setObjects] = useState(() => ({[namespace]: initialValue}));
+        globalVar[namespace] = initialValue;
     }
+    const [objects, setObjects] = useState(globalVar);
     
     function addObject(key, val){
         let temp = assignOne(objects[namespace], key, val);
         let temp2 = assignOne(objects, namespace, temp);
         setObjects(temp2);
+        return temp;
     }
     
     function setObject(values = {}){
         let temp = assignOne(objects, namespace, values);
         setObjects(temp);
+        return values;
     }
     
     function delObject(key){
@@ -23,6 +26,7 @@ export default function initialStore(namespace, initialValue){
         delete temp[key];
         let temp2 = assignOne(objects, namespace, temp);
         setObjects(temp2);
+        return temp
     }
     
     function spliceObject(index, length, values){
@@ -37,6 +41,7 @@ export default function initialStore(namespace, initialValue){
         
         let temp3 = assignOne(objects, namespace, temp2);
         setObjects(temp3);
+        return temp2;
     }
     
     function getObject(){

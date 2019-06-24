@@ -14,19 +14,20 @@ export default (namespace, initialValue) => {
     
     function set(val){
         checkBoolean(val);
-        setBoolean(val);
+        return setBoolean(val);
     }
     
     function reset(){
-        set(initialValues[namespace]);
+        return set(initialValues[namespace]);
     }
     
     function reInitial(value){
-        set(value);
+        initialValues[namespace] = value;
+        return set(value);
     }
     
     function toggle(){
-        toggleBoolean();
+        return toggleBoolean();
     }
     
     return {

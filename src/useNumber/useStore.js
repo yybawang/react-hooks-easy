@@ -15,25 +15,26 @@ export default function useStore(namespace, initialValue) {
     
     function set(val){
         checkNumber(val);
-        setNumber(val);
+        return setNumber(val);
     }
     
     function reset(){
-        set(initialValues[namespace]);
+        return set(initialValues[namespace]);
     }
     
     function reInitial(value){
-        set(value);
+        initialValues[namespace] = value;
+        return set(value);
     }
     
     function increment(inc = 1){
         checkNumber(inc);
-        incrementNumber(inc);
+        return incrementNumber(inc);
     }
     
     function decrement(inc = 1){
         checkNumber(inc);
-        decrementNumber(inc);
+        return decrementNumber(inc);
     }
     
     return {

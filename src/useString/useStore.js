@@ -12,28 +12,33 @@ export default function useStore(namespace, initialValue) {
     }
     const {string, setString, appendString, prependString} = initialStore(namespace, initialValue);
     
-    function set(val){
-        checkString(val);
-        setString(val);
+    function set(value){
+        checkString(value);
+        return setString(value);
     }
     
     function reset(){
-        setString(initialValues[namespace]);
+        return setString(initialValues[namespace]);
     }
     
-    function append(val){
-        appendString(val);
+    function reInitial(value){
+        initialValues[namespace] = value;
+        return setString(value);
     }
     
-    function prepend(val){
-        prependString(val);
+    function append(value){
+        return appendString(value);
+    }
+    
+    function prepend(value){
+        return prependString(value);
     }
     
     return {
         value: string,
         set,
         reset,
-        reInitial: set,
+        reInitial,
         append,
         prepend,
     };

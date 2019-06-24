@@ -14,24 +14,25 @@ export default function useStore(namespace, initialValue){
     
     function add(key, val){
         checkString(key);
-        addObject(key, val);
+        return addObject(key, val);
     }
     
     function reset(){
-        setObject(initialValues[namespace]);
+        return setObject(initialValues[namespace]);
     }
     
     function reInitial(values){
         checkObject(values);
-        setObject(values);
+        initialValues[namespace] = values;
+        return setObject(values);
     }
     
     function del(key){
-        delObject(key);
+        return delObject(key);
     }
     
     function splice(index, length, values){
-        spliceObject(index, length, values);
+        return spliceObject(index, length, values);
     }
     
     

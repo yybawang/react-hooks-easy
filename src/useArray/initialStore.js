@@ -1,15 +1,17 @@
 import React, {useState} from 'react'
 import {assignOne} from "../utils/assign";
 
-let arrays, setArrays;
+let globalVar = {};
 export default function initialStore(namespace, initialValue){
     if(initialValue !== undefined){
-        [arrays, setArrays] = useState(() => ({[namespace]: initialValue}));
+        globalVar[namespace] = initialValue;
     }
+    const [arrays, setArrays] = useState(globalVar);
     
     function setArray(values = []){
         let temp = assignOne(arrays, namespace, values);
         setArrays(temp);
+        return temp;
     }
     
     function pushArray(val){
@@ -17,6 +19,7 @@ export default function initialStore(namespace, initialValue){
         temp.push(val);
         let temp2 = assignOne(arrays, namespace, temp);
         setArrays(temp2);
+        return temp;
     }
     
     function unshiftArray(val){
@@ -24,6 +27,7 @@ export default function initialStore(namespace, initialValue){
         temp.unshift(val);
         let temp2 = assignOne(arrays, namespace, temp);
         setArrays(temp2);
+        return temp;
     }
     
     function spliceArray(index, length, ...values){
@@ -31,6 +35,7 @@ export default function initialStore(namespace, initialValue){
         temp.splice(index, length, ...values);
         let temp2 = assignOne(arrays, namespace, temp);
         setArrays(temp2);
+        return temp;
     }
     
     function getArray(){
