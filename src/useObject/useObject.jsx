@@ -1,8 +1,8 @@
 import React from 'react'
-import useStore from "./useStore";
+import InitialStore from "./InitialStore";
 
 export function useObject(namespace, initialValue){
-    const {value, add, reset, reInitial, del, splice} = useStore(namespace, initialValue);
+    const {value, add, reset, reInitial, del, splice} = InitialStore(namespace, initialValue);
     
     return {
         value,

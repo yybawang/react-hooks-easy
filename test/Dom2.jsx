@@ -9,6 +9,7 @@ export default function Dom2(props){
         <div>
             {/*<div>{JSON.stringify(test.value)}</div>*/}
             <div>{JSON.stringify(test2.value)}</div>
+            <button onClick={() => test2.set('11111', '333333')}>Toggle2</button>
         </div>
     )
 }

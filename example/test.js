@@ -86,6 +86,324 @@
 /************************************************************************/
 /******/ ({
 
+/***/ "./node_modules/iostore/src/createStore.js":
+/*!*************************************************!*\
+  !*** ./node_modules/iostore/src/createStore.js ***!
+  \*************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./node_modules/iostore/src/util.js");
+/* harmony import */ var _pub__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pub */ "./node_modules/iostore/src/pub.js");
+/* harmony import */ var _stores__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./stores */ "./node_modules/iostore/src/stores.js");
+/* harmony import */ var _useStore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./useStore */ "./node_modules/iostore/src/useStore.js");
+
+
+
+
+
+const disableProps = ['loading', 'stores', 'useStore'];
+
+/* harmony default export */ __webpack_exports__["default"] = (config => {
+  const { namespace = '', ...rest } = config;
+  let service;
+  let isChanged = false;
+
+  const reducers = {};
+  const state = { namespace };
+
+  if (!namespace) {
+    throw new Error('Invalid params, namespace is required.');
+  }
+  if (_stores__WEBPACK_IMPORTED_MODULE_2__["default"][namespace]) {
+    return _stores__WEBPACK_IMPORTED_MODULE_2__["default"][namespace];
+  }
+  disableProps.forEach(key => {
+    if (!Object(_util__WEBPACK_IMPORTED_MODULE_0__["isUndefined"])(rest[key])) {
+      throw new Error(`${key} is not allowd in params.`);
+    }
+  });
+
+  Object.keys(rest).forEach(key => {
+    if (Object(_util__WEBPACK_IMPORTED_MODULE_0__["isFunction"])(rest[key])) {
+      reducers[key] = rest[key];
+    } else {
+      state[key] = rest[key];
+    }
+  });
+
+  const checkReducersStatus = name => {
+    const keys = Object.keys(reducers);
+    for (let i = 0; i < keys.length; i++) {
+      if (service[keys[i]][name]) return true;
+    }
+    return false;
+  };
+
+  const handler = {
+    set(target, prop, newValue) {
+      if (disableProps.includes(prop) || Object(_util__WEBPACK_IMPORTED_MODULE_0__["isFunction"])(newValue)) {
+        target[prop] = newValue;
+        return true;
+      }
+      if (!checkReducersStatus('unlock')) {
+        console.error(
+          'Do not modify data within components, call a method of service to update the data.',
+          `namespace:${namespace}, prop:${prop}, value:${newValue}`
+        );
+      }
+      if (target[prop] !== newValue) {
+        isChanged = true;
+      }
+      target[prop] = Object(_util__WEBPACK_IMPORTED_MODULE_0__["addProxy"])(newValue, handler);
+      return true;
+    },
+  };
+  service = Object(_util__WEBPACK_IMPORTED_MODULE_0__["addProxy"])(state, handler);
+
+  const checkUpdateAndBroadcast = () => {
+    if (isChanged) {
+      isChanged = false;
+      Object(_pub__WEBPACK_IMPORTED_MODULE_1__["broadcast"])(namespace, Math.random());
+    }
+  };
+
+  Object.keys(reducers).forEach(key => {
+    service[key] = (...args) => {
+      service[key].unlock = true;
+      const promise = reducers[key].apply(service, args);
+      if (!Object(_util__WEBPACK_IMPORTED_MODULE_0__["isPromise"])(promise)) {
+        service[key].unlock = false;
+        checkUpdateAndBroadcast();
+        return promise;
+      }
+      isChanged = true;
+      service[key].loading = true;
+      service[key].unlock = true;
+      checkUpdateAndBroadcast();
+      return new Promise((resolve, reject) => {
+        promise
+          .then(resolve)
+          .catch(reject)
+          .finally(() => {
+            isChanged = true;
+            service[key].loading = false;
+            service[key].unlock = false;
+            checkUpdateAndBroadcast();
+          });
+      });
+    };
+    service[key].loading = false;
+    service[key].unlock = false;
+  });
+
+  Object.defineProperty(service, 'loading', {
+    get() {
+      return checkReducersStatus('loading');
+    },
+  });
+
+  Object.assign(service, {
+    stores: _stores__WEBPACK_IMPORTED_MODULE_2__["default"],
+    useStore: () => Object(_useStore__WEBPACK_IMPORTED_MODULE_3__["default"])()[namespace],
+  });
+
+  _stores__WEBPACK_IMPORTED_MODULE_2__["default"][namespace] = service;
+  return service;
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/iostore/src/index.js":
+/*!*******************************************!*\
+  !*** ./node_modules/iostore/src/index.js ***!
+  \*******************************************/
+/*! exports provided: useStore, createStore, default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./node_modules/iostore/src/store.js");
+/* harmony import */ var _createStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./createStore */ "./node_modules/iostore/src/createStore.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "createStore", function() { return _createStore__WEBPACK_IMPORTED_MODULE_1__["default"]; });
+
+/* harmony import */ var _useStore__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./useStore */ "./node_modules/iostore/src/useStore.js");
+/* harmony reexport (safe) */ __webpack_require__.d(__webpack_exports__, "useStore", function() { return _useStore__WEBPACK_IMPORTED_MODULE_2__["default"]; });
+
+
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (_store__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+/***/ }),
+
+/***/ "./node_modules/iostore/src/pub.js":
+/*!*****************************************!*\
+  !*** ./node_modules/iostore/src/pub.js ***!
+  \*****************************************/
+/*! exports provided: broadcast, subScribe, unSubScribe */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "broadcast", function() { return broadcast; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "subScribe", function() { return subScribe; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "unSubScribe", function() { return unSubScribe; });
+const queue = {};
+const broadcast = (name, state) => {
+  if (!queue[name]) return;
+  queue[name].forEach(fn => fn(state));
+};
+const subScribe = (name, cb) => {
+  if (!queue[name]) queue[name] = [];
+  queue[name].push(cb);
+};
+const unSubScribe = (name, cb) => {
+  if (!queue[name]) return;
+  const index = queue[name].indexOf(cb);
+  if (index !== -1) queue[name].splice(index, 1);
+};
+
+
+/***/ }),
+
+/***/ "./node_modules/iostore/src/store.js":
+/*!*******************************************!*\
+  !*** ./node_modules/iostore/src/store.js ***!
+  \*******************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _util__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./util */ "./node_modules/iostore/src/util.js");
+/* harmony import */ var _stores__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./stores */ "./node_modules/iostore/src/stores.js");
+/* harmony import */ var _useReactHooks__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./useReactHooks */ "./node_modules/iostore/src/useReactHooks.js");
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (Object(_util__WEBPACK_IMPORTED_MODULE_0__["addProxy"])(
+  {},
+  {
+    get(target, key) {
+      if (!_stores__WEBPACK_IMPORTED_MODULE_1__["default"][key]) throw new Error(`Not found the store: ${key}.`);
+      Object(_useReactHooks__WEBPACK_IMPORTED_MODULE_2__["default"])(key);
+      return _stores__WEBPACK_IMPORTED_MODULE_1__["default"][key];
+    },
+  }
+));
+
+
+/***/ }),
+
+/***/ "./node_modules/iostore/src/stores.js":
+/*!********************************************!*\
+  !*** ./node_modules/iostore/src/stores.js ***!
+  \********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony default export */ __webpack_exports__["default"] = ({});
+
+
+/***/ }),
+
+/***/ "./node_modules/iostore/src/useReactHooks.js":
+/*!***************************************************!*\
+  !*** ./node_modules/iostore/src/useReactHooks.js ***!
+  \***************************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _pub__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./pub */ "./node_modules/iostore/src/pub.js");
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = (name => {
+  const [, setState] = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])();
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(() => {
+    Object(_pub__WEBPACK_IMPORTED_MODULE_1__["subScribe"])(name, setState);
+    return () => Object(_pub__WEBPACK_IMPORTED_MODULE_1__["unSubScribe"])(name, setState);
+  }, []);
+});
+
+
+/***/ }),
+
+/***/ "./node_modules/iostore/src/useStore.js":
+/*!**********************************************!*\
+  !*** ./node_modules/iostore/src/useStore.js ***!
+  \**********************************************/
+/*! exports provided: default */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony import */ var _store__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./store */ "./node_modules/iostore/src/store.js");
+
+
+/* harmony default export */ __webpack_exports__["default"] = (() => _store__WEBPACK_IMPORTED_MODULE_0__["default"]);
+
+
+/***/ }),
+
+/***/ "./node_modules/iostore/src/util.js":
+/*!******************************************!*\
+  !*** ./node_modules/iostore/src/util.js ***!
+  \******************************************/
+/*! exports provided: isFunction, isUndefined, isObject, isArray, isPromise, addProxy */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isFunction", function() { return isFunction; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isUndefined", function() { return isUndefined; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isObject", function() { return isObject; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isArray", function() { return isArray; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "isPromise", function() { return isPromise; });
+/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "addProxy", function() { return addProxy; });
+const isFunction = fn => typeof fn === 'function';
+const isUndefined = prop => typeof prop === 'undefined';
+const isObject = o => typeof o === 'object';
+const isArray = o => Array.isArray(o);
+const isPromise = fn => {
+  if (fn instanceof Promise) return true;
+  return isObject(fn) && isFunction(fn.then);
+};
+const addProxy = (o, handler) => {
+  if (!isObject(o) || o === null) return o;
+  if (isArray(o)) {
+    o.forEach((item, index) => {
+      if (isObject(item)) {
+        o[index] = addProxy(item, handler);
+      }
+    });
+  } else if (isObject(o)) {
+    Object.keys(o).forEach(key => {
+      if (isObject(o[key])) {
+        o[key] = addProxy(o[key], handler);
+      }
+    });
+  }
+  return new Proxy(o, handler);
+};
+
+
+/***/ }),
+
 /***/ "./node_modules/object-assign/index.js":
 /*!*********************************************!*\
   !*** ./node_modules/object-assign/index.js ***!
@@ -24844,9 +25162,9 @@ __webpack_require__.r(__webpack_exports__);
 
 /***/ }),
 
-/***/ "./src/useArray/initialStore.js":
+/***/ "./src/useArray/InitialStore.js":
 /*!**************************************!*\
-  !*** ./src/useArray/initialStore.js ***!
+  !*** ./src/useArray/InitialStore.js ***!
   \**************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -24856,7 +25174,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return initialStore; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_assign__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/assign */ "./src/utils/assign.js");
+/* harmony import */ var _utils_namespaceParse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/namespaceParse */ "./src/utils/namespaceParse.js");
+/* harmony import */ var _utils_checkType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/checkType */ "./src/utils/checkType.js");
+/* harmony import */ var iostore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! iostore */ "./node_modules/iostore/src/index.js");
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -24865,76 +25185,52 @@ function _iterableToArray(iter) { if (Symbol.iterator in Object(iter) || Object.
 
 function _arrayWithoutHoles(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = new Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var globalVar = {};
-function initialStore(namespace, initialValue) {
+
+var initialValues = {};
+function initialStore(initialNamespace, initialValue) {
+  initialNamespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_1__["namespaceParse"])(initialNamespace);
+
   if (initialValue !== undefined) {
-    globalVar[namespace] = initialValue;
+    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_2__["checkArray"])(initialValue);
+    initialValues[initialNamespace] || (initialValues[initialNamespace] = _toConsumableArray(initialValue));
+    Object(iostore__WEBPACK_IMPORTED_MODULE_3__["createStore"])({
+      namespace: initialNamespace,
+      value: initialValue,
+      add: function add(key, val) {
+        this.value[key] = val;
+      },
+      reset: function reset() {
+        this.value = _toConsumableArray(initialValues[initialNamespace]);
+      },
+      reInitial: function reInitial(value) {
+        initialValues[initialNamespace] = _toConsumableArray(value);
+        this.value = value;
+      },
+      del: function del(key) {
+        delete this.value[key];
+      },
+      push: function push(val) {
+        this.value.push(val);
+      },
+      unshift: function unshift(val) {
+        this.value.unshift(val);
+      },
+      splice: function splice(index, length) {
+        var _this$value;
+
+        for (var _len = arguments.length, value = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
+          value[_key - 2] = arguments[_key];
+        }
+
+        (_this$value = this.value).splice.apply(_this$value, [index, length].concat(value));
+      }
+    });
   }
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(globalVar),
-      _useState2 = _slicedToArray(_useState, 2),
-      arrays = _useState2[0],
-      setArrays = _useState2[1];
-
-  function setArray() {
-    var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-    var temp = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(arrays, namespace, values);
-    setArrays(temp);
-    return temp;
-  }
-
-  function pushArray(val) {
-    var temp = _toConsumableArray(arrays[namespace]);
-
-    temp.push(val);
-    var temp2 = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(arrays, namespace, temp);
-    setArrays(temp2);
-    return temp;
-  }
-
-  function unshiftArray(val) {
-    var temp = _toConsumableArray(arrays[namespace]);
-
-    temp.unshift(val);
-    var temp2 = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(arrays, namespace, temp);
-    setArrays(temp2);
-    return temp;
-  }
-
-  function spliceArray(index, length) {
-    var temp = _toConsumableArray(arrays[namespace]);
-
-    for (var _len = arguments.length, values = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-      values[_key - 2] = arguments[_key];
-    }
-
-    temp.splice.apply(temp, [index, length].concat(values));
-    var temp2 = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(arrays, namespace, temp);
-    setArrays(temp2);
-    return temp;
-  }
-
-  function getArray() {
-    return arrays[namespace];
-  }
-
-  return {
-    array: getArray(),
-    setArray: setArray,
-    pushArray: pushArray,
-    unshiftArray: unshiftArray,
-    spliceArray: spliceArray
-  };
+  return iostore__WEBPACK_IMPORTED_MODULE_3__["default"][initialNamespace];
 }
 
 /***/ }),
@@ -24952,30 +25248,31 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useList", function() { return useList; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _useStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useStore */ "./src/useArray/useStore.js");
+/* harmony import */ var _InitialStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InitialStore */ "./src/useArray/InitialStore.js");
 
 
 function useArray(namespace, initialValue) {
-  var _useStore = Object(_useStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
-      value = _useStore.value,
-      add = _useStore.add,
-      reset = _useStore.reset,
-      reInitial = _useStore.reInitial,
-      push = _useStore.push,
-      unshift = _useStore.unshift,
-      del = _useStore.del,
-      splice = _useStore.splice;
+  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
+      value = _InitialStore.value,
+      add = _InitialStore.add,
+      reset = _InitialStore.reset,
+      reInitial = _InitialStore.reInitial,
+      push = _InitialStore.push,
+      unshift = _InitialStore.unshift,
+      del = _InitialStore.del,
+      splice = _InitialStore.splice;
 
   return {
     value: value,
     set: add,
+    // alias
     add: add,
     reset: reset,
     reInitial: reInitial,
-    append: push,
     push: push,
-    prepend: unshift,
+    append: push,
     unshift: unshift,
+    prepend: unshift,
     del: del,
     splice: splice
   };
@@ -24986,94 +25283,9 @@ function useList(namespace, initialValue) {
 
 /***/ }),
 
-/***/ "./src/useArray/useStore.js":
-/*!**********************************!*\
-  !*** ./src/useArray/useStore.js ***!
-  \**********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return useStore; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _initialStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./initialStore */ "./src/useArray/initialStore.js");
-/* harmony import */ var _utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/namespaceParse */ "./src/utils/namespaceParse.js");
-/* harmony import */ var _utils_checkType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/checkType */ "./src/utils/checkType.js");
-
-
-
-
-var initialValues = {};
-function useStore(namespace, initialValue) {
-  namespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__["namespaceParse"])(namespace);
-
-  if (initialValue !== undefined) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkArray"])(initialValue);
-    initialValues[namespace] || (initialValues[namespace] = initialValue);
-  }
-
-  var _initialStore = Object(_initialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
-      array = _initialStore.array,
-      setArray = _initialStore.setArray,
-      pushArray = _initialStore.pushArray,
-      unshiftArray = _initialStore.unshiftArray,
-      spliceArray = _initialStore.spliceArray;
-
-  function add(index, val) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkNumber"])(index);
-    return spliceArray(index, 1, val);
-  }
-
-  function reset() {
-    return setArray(initialValues[namespace]);
-  }
-
-  function reInitial(values) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkArray"])(values);
-    initialValues[namespace] = values;
-    return set(values);
-  }
-
-  function del(index) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkNumber"])(index);
-    return spliceArray(index, 1);
-  }
-
-  function push(val) {
-    return pushArray(val);
-  }
-
-  function unshift(val) {
-    return unshiftArray(val);
-  }
-
-  function splice(index, length) {
-    for (var _len = arguments.length, values = new Array(_len > 2 ? _len - 2 : 0), _key = 2; _key < _len; _key++) {
-      values[_key - 2] = arguments[_key];
-    }
-
-    return spliceArray.apply(void 0, [index, length].concat(values));
-  }
-
-  return {
-    value: array,
-    add: add,
-    reset: reset,
-    reInitial: reInitial,
-    push: push,
-    unshift: unshift,
-    del: del,
-    splice: splice
-  };
-}
-
-/***/ }),
-
-/***/ "./src/useBoolean/initialStore.js":
+/***/ "./src/useBoolean/InitialStore.js":
 /*!****************************************!*\
-  !*** ./src/useBoolean/initialStore.js ***!
+  !*** ./src/useBoolean/InitialStore.js ***!
   \****************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -25083,49 +25295,40 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return initialStore; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_assign__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/assign */ "./src/utils/assign.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+/* harmony import */ var _utils_namespaceParse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/namespaceParse */ "./src/utils/namespaceParse.js");
+/* harmony import */ var _utils_checkType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/checkType */ "./src/utils/checkType.js");
+/* harmony import */ var iostore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! iostore */ "./node_modules/iostore/src/index.js");
 
 
 
-var globalVar = {};
-function initialStore(namespace, initialValue) {
+
+var initialValues = {};
+function initialStore(initialNamespace, initialValue) {
+  initialNamespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_1__["namespaceParse"])(initialNamespace);
+
   if (initialValue !== undefined) {
-    globalVar[namespace] = initialValue;
+    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_2__["checkBoolean"])(initialValue);
+    initialValues[initialNamespace] || (initialValues[initialNamespace] = initialValue);
+    Object(iostore__WEBPACK_IMPORTED_MODULE_3__["createStore"])({
+      namespace: initialNamespace,
+      value: initialValue,
+      set: function set(val) {
+        this.value = val;
+      },
+      reset: function reset() {
+        this.value = initialValues[initialNamespace];
+      },
+      reInitial: function reInitial(value) {
+        initialValues[initialNamespace] = value;
+        this.value = value;
+      },
+      toggle: function toggle() {
+        this.value = !this.value;
+      }
+    });
   }
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(globalVar),
-      _useState2 = _slicedToArray(_useState, 2),
-      booleans = _useState2[0],
-      setBooleans = _useState2[1];
-
-  function setBoolean(val) {
-    var temp = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(booleans, namespace, val);
-    setBooleans(temp);
-    return val;
-  }
-
-  function toggleBoolean() {
-    var temp = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(booleans, namespace, !booleans[namespace]);
-    setBooleans(temp);
-    return !booleans[namespace];
-  }
-
-  function getBoolean() {
-    return booleans[namespace];
-  }
-
-  return {
-    "boolean": getBoolean(),
-    setBoolean: setBoolean,
-    toggleBoolean: toggleBoolean
-  };
+  return iostore__WEBPACK_IMPORTED_MODULE_3__["default"][initialNamespace];
 }
 
 /***/ }),
@@ -25142,16 +25345,16 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useBoolean", function() { return useBoolean; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _useStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useStore */ "./src/useBoolean/useStore.js");
+/* harmony import */ var _InitialStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InitialStore */ "./src/useBoolean/InitialStore.js");
 
 
 function useBoolean(namespace, initialValue) {
-  var _useStore = Object(_useStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
-      value = _useStore.value,
-      set = _useStore.set,
-      reset = _useStore.reset,
-      reInitial = _useStore.reInitial,
-      toggle = _useStore.toggle;
+  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
+      value = _InitialStore.value,
+      set = _InitialStore.set,
+      reset = _InitialStore.reset,
+      reInitial = _InitialStore.reInitial,
+      toggle = _InitialStore.toggle;
 
   return {
     value: value,
@@ -25164,70 +25367,9 @@ function useBoolean(namespace, initialValue) {
 
 /***/ }),
 
-/***/ "./src/useBoolean/useStore.js":
-/*!************************************!*\
-  !*** ./src/useBoolean/useStore.js ***!
-  \************************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _initialStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./initialStore */ "./src/useBoolean/initialStore.js");
-/* harmony import */ var _utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/namespaceParse */ "./src/utils/namespaceParse.js");
-/* harmony import */ var _utils_checkType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/checkType */ "./src/utils/checkType.js");
-
-
-
-
-var initialValues = {};
-/* harmony default export */ __webpack_exports__["default"] = (function (namespace, initialValue) {
-  namespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__["namespaceParse"])(namespace);
-
-  if (initialValue !== undefined) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkBoolean"])(initialValue);
-    initialValues[namespace] || (initialValues[namespace] = initialValue);
-  }
-
-  var _initialStore = Object(_initialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
-      _boolean = _initialStore["boolean"],
-      setBoolean = _initialStore.setBoolean,
-      toggleBoolean = _initialStore.toggleBoolean;
-
-  function set(val) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkBoolean"])(val);
-    return setBoolean(val);
-  }
-
-  function reset() {
-    return set(initialValues[namespace]);
-  }
-
-  function reInitial(value) {
-    initialValues[namespace] = value;
-    return set(value);
-  }
-
-  function toggle() {
-    return toggleBoolean();
-  }
-
-  return {
-    value: _boolean,
-    set: set,
-    reset: reset,
-    reInitial: reInitial,
-    toggle: toggle
-  };
-});
-
-/***/ }),
-
-/***/ "./src/useNumber/initialStore.js":
+/***/ "./src/useNumber/InitialStore.js":
 /*!***************************************!*\
-  !*** ./src/useNumber/initialStore.js ***!
+  !*** ./src/useNumber/InitialStore.js ***!
   \***************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -25237,56 +25379,44 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return initialStore; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_assign__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/assign */ "./src/utils/assign.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
+/* harmony import */ var _utils_namespaceParse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/namespaceParse */ "./src/utils/namespaceParse.js");
+/* harmony import */ var _utils_checkType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/checkType */ "./src/utils/checkType.js");
+/* harmony import */ var iostore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! iostore */ "./node_modules/iostore/src/index.js");
 
 
 
-var globalVar = {};
-function initialStore(namespace, initialValue) {
+
+var initialValues = {};
+function initialStore(initialNamespace, initialValue) {
+  initialNamespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_1__["namespaceParse"])(initialNamespace);
+
   if (initialValue !== undefined) {
-    globalVar[namespace] = initialValue;
+    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_2__["checkNumber"])(initialValue);
+    initialValue = Number(initialValue);
+    initialValues[initialNamespace] || (initialValues[initialNamespace] = initialValue);
+    Object(iostore__WEBPACK_IMPORTED_MODULE_3__["createStore"])({
+      namespace: initialNamespace,
+      value: initialValue,
+      set: function set(val) {
+        this.value = val;
+      },
+      reset: function reset() {
+        this.value = initialValues[initialNamespace];
+      },
+      reInitial: function reInitial(value) {
+        initialValues[initialNamespace] = value;
+        this.value = value;
+      },
+      increment: function increment(val) {
+        this.value += val;
+      },
+      decrement: function decrement(val) {
+        this.value -= val;
+      }
+    });
   }
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(globalVar),
-      _useState2 = _slicedToArray(_useState, 2),
-      numbers = _useState2[0],
-      setNumbers = _useState2[1];
-
-  function setNumber(val) {
-    var temp = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(numbers, namespace, val);
-    setNumbers(temp);
-    return val;
-  }
-
-  function incrementNumber(inc) {
-    var temp = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(numbers, namespace, numbers[namespace] + inc);
-    setNumbers(temp);
-    return numbers[namespace] + inc;
-  }
-
-  function decrementNumber(inc) {
-    var temp = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(numbers, namespace, numbers[namespace] - inc);
-    setNumbers(temp);
-    return numbers[namespace] - inc;
-  }
-
-  function getNumber() {
-    return numbers[namespace];
-  }
-
-  return {
-    number: getNumber(),
-    setNumber: setNumber,
-    incrementNumber: incrementNumber,
-    decrementNumber: decrementNumber
-  };
+  return iostore__WEBPACK_IMPORTED_MODULE_3__["default"][initialNamespace];
 }
 
 /***/ }),
@@ -25303,17 +25433,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useNumber", function() { return useNumber; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _useStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useStore */ "./src/useNumber/useStore.js");
+/* harmony import */ var _InitialStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InitialStore */ "./src/useNumber/InitialStore.js");
 
 
 function useNumber(namespace, initialValue) {
-  var _useStore = Object(_useStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
-      value = _useStore.value,
-      set = _useStore.set,
-      reset = _useStore.reset,
-      reInitial = _useStore.reInitial,
-      increment = _useStore.increment,
-      decrement = _useStore.decrement;
+  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
+      value = _InitialStore.value,
+      set = _InitialStore.set,
+      reset = _InitialStore.reset,
+      reInitial = _InitialStore.reInitial,
+      increment = _InitialStore.increment,
+      decrement = _InitialStore.decrement;
 
   return {
     value: value,
@@ -25329,82 +25459,9 @@ function useNumber(namespace, initialValue) {
 
 /***/ }),
 
-/***/ "./src/useNumber/useStore.js":
-/*!***********************************!*\
-  !*** ./src/useNumber/useStore.js ***!
-  \***********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return useStore; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _initialStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./initialStore */ "./src/useNumber/initialStore.js");
-/* harmony import */ var _utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/namespaceParse */ "./src/utils/namespaceParse.js");
-/* harmony import */ var _utils_checkType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/checkType */ "./src/utils/checkType.js");
-
-
-
-
-var initialValues = {};
-function useStore(namespace, initialValue) {
-  namespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__["namespaceParse"])(namespace);
-
-  if (initialValue !== undefined) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkNumber"])(initialValue);
-    initialValue = Number(initialValue);
-    initialValues[namespace] || (initialValues[namespace] = initialValue);
-  }
-
-  var _initialStore = Object(_initialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
-      number = _initialStore.number,
-      setNumber = _initialStore.setNumber,
-      incrementNumber = _initialStore.incrementNumber,
-      decrementNumber = _initialStore.decrementNumber;
-
-  function set(val) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkNumber"])(val);
-    return setNumber(val);
-  }
-
-  function reset() {
-    return set(initialValues[namespace]);
-  }
-
-  function reInitial(value) {
-    initialValues[namespace] = value;
-    return set(value);
-  }
-
-  function increment() {
-    var inc = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkNumber"])(inc);
-    return incrementNumber(inc);
-  }
-
-  function decrement() {
-    var inc = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 1;
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkNumber"])(inc);
-    return decrementNumber(inc);
-  }
-
-  return {
-    value: number,
-    set: set,
-    reset: reset,
-    reInitial: reInitial,
-    increment: increment,
-    decrement: decrement
-  };
-}
-
-/***/ }),
-
-/***/ "./src/useObject/initialStore.js":
+/***/ "./src/useObject/InitialStore.js":
 /*!***************************************!*\
-  !*** ./src/useObject/initialStore.js ***!
+  !*** ./src/useObject/InitialStore.js ***!
   \***************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -25414,7 +25471,9 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return initialStore; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_assign__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/assign */ "./src/utils/assign.js");
+/* harmony import */ var _utils_namespaceParse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/namespaceParse */ "./src/utils/namespaceParse.js");
+/* harmony import */ var _utils_checkType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/checkType */ "./src/utils/checkType.js");
+/* harmony import */ var iostore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! iostore */ "./node_modules/iostore/src/index.js");
 function _toConsumableArray(arr) { return _arrayWithoutHoles(arr) || _iterableToArray(arr) || _nonIterableSpread(); }
 
 function _nonIterableSpread() { throw new TypeError("Invalid attempt to spread non-iterable instance"); }
@@ -25427,79 +25486,53 @@ function _objectSpread(target) { for (var i = 1; i < arguments.length; i++) { va
 
 function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
 
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
 
 
 
-var globalVar = {};
-function initialStore(namespace, initialValue) {
+
+var initialValues = {};
+function initialStore(initialNamespace, initialValue) {
+  initialNamespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_1__["namespaceParse"])(initialNamespace);
+
   if (initialValue !== undefined) {
-    globalVar[namespace] = initialValue;
+    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_2__["checkObject"])(initialValue);
+    initialValues[initialNamespace] || (initialValues[initialNamespace] = _objectSpread({}, initialValue));
+    Object(iostore__WEBPACK_IMPORTED_MODULE_3__["createStore"])({
+      namespace: initialNamespace,
+      value: initialValue,
+      add: function add(key, val) {
+        this.value[key] = val;
+      },
+      reset: function reset() {
+        this.value = _objectSpread({}, initialValues[initialNamespace]);
+      },
+      reInitial: function reInitial(value) {
+        initialValues[initialNamespace] = _objectSpread({}, value);
+        this.value = value;
+      },
+      del: function del(key) {
+        delete this.value[key];
+      },
+      // 擴展數組的splice方法，方便在對象中排序
+      splice: function splice(index, length, value) {
+        var temp = _objectSpread({}, this.value),
+            temp_keys = Object.keys(temp),
+            temp_values = Object.values(temp);
+
+        temp_keys.splice.apply(temp_keys, [index, length].concat(_toConsumableArray(Object.keys(value))));
+        temp_values.splice.apply(temp_values, [index, length].concat(_toConsumableArray(Object.values(value))));
+        var temp2 = {};
+
+        for (var i in temp_keys) {
+          temp2[temp_keys[i]] = temp_values[i];
+        }
+
+        this.value = temp2;
+      }
+    });
   }
 
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(globalVar),
-      _useState2 = _slicedToArray(_useState, 2),
-      objects = _useState2[0],
-      setObjects = _useState2[1];
-
-  function addObject(key, val) {
-    var temp = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(objects[namespace], key, val);
-    var temp2 = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(objects, namespace, temp);
-    setObjects(temp2);
-    return temp;
-  }
-
-  function setObject() {
-    var values = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-    var temp = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(objects, namespace, values);
-    setObjects(temp);
-    return values;
-  }
-
-  function delObject(key) {
-    var temp = _objectSpread({}, objects[namespace]);
-
-    delete temp[key];
-    var temp2 = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(objects, namespace, temp);
-    setObjects(temp2);
-    return temp;
-  }
-
-  function spliceObject(index, length, values) {
-    var temp = _objectSpread({}, objects[namespace]),
-        temp_keys = Object.keys(temp),
-        temp_values = Object.values(temp);
-
-    temp_keys.splice.apply(temp_keys, [index, length].concat(_toConsumableArray(Object.keys(values))));
-    temp_values.splice.apply(temp_values, [index, length].concat(_toConsumableArray(Object.values(values))));
-    var temp2 = {};
-
-    for (var i in temp_keys) {
-      temp2[temp_keys[i]] = temp_values[i];
-    }
-
-    var temp3 = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(objects, namespace, temp2);
-    setObjects(temp3);
-    return temp2;
-  }
-
-  function getObject() {
-    return objects[namespace];
-  }
-
-  return {
-    object: getObject(),
-    setObject: setObject,
-    addObject: addObject,
-    delObject: delObject,
-    spliceObject: spliceObject
-  };
+  return iostore__WEBPACK_IMPORTED_MODULE_3__["default"][initialNamespace];
 }
 
 /***/ }),
@@ -25517,17 +25550,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useMap", function() { return useMap; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _useStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useStore */ "./src/useObject/useStore.js");
+/* harmony import */ var _InitialStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InitialStore */ "./src/useObject/InitialStore.js");
 
 
 function useObject(namespace, initialValue) {
-  var _useStore = Object(_useStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
-      value = _useStore.value,
-      add = _useStore.add,
-      reset = _useStore.reset,
-      reInitial = _useStore.reInitial,
-      del = _useStore.del,
-      splice = _useStore.splice;
+  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
+      value = _InitialStore.value,
+      add = _InitialStore.add,
+      reset = _InitialStore.reset,
+      reInitial = _InitialStore.reInitial,
+      del = _InitialStore.del,
+      splice = _InitialStore.splice;
 
   return {
     value: value,
@@ -25546,79 +25579,9 @@ function useMap(namespace, initialValue) {
 
 /***/ }),
 
-/***/ "./src/useObject/useStore.js":
-/*!***********************************!*\
-  !*** ./src/useObject/useStore.js ***!
-  \***********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return useStore; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _initialStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./initialStore */ "./src/useObject/initialStore.js");
-/* harmony import */ var _utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/namespaceParse */ "./src/utils/namespaceParse.js");
-/* harmony import */ var _utils_checkType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/checkType */ "./src/utils/checkType.js");
-
-
-
-
-var initialValues = {};
-function useStore(namespace, initialValue) {
-  namespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__["namespaceParse"])(namespace);
-
-  if (initialValue !== undefined) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkObject"])(initialValue);
-    initialValues[namespace] || (initialValues[namespace] = initialValue);
-  }
-
-  var _initialStore = Object(_initialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
-      object = _initialStore.object,
-      addObject = _initialStore.addObject,
-      setObject = _initialStore.setObject,
-      delObject = _initialStore.delObject,
-      spliceObject = _initialStore.spliceObject;
-
-  function add(key, val) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkString"])(key);
-    return addObject(key, val);
-  }
-
-  function reset() {
-    return setObject(initialValues[namespace]);
-  }
-
-  function reInitial(values) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkObject"])(values);
-    initialValues[namespace] = values;
-    return setObject(values);
-  }
-
-  function del(key) {
-    return delObject(key);
-  }
-
-  function splice(index, length, values) {
-    return spliceObject(index, length, values);
-  }
-
-  return {
-    value: object,
-    add: add,
-    reset: reset,
-    reInitial: reInitial,
-    del: del,
-    splice: splice
-  };
-}
-
-/***/ }),
-
-/***/ "./src/useString/initialStore.js":
+/***/ "./src/useString/InitialStore.js":
 /*!***************************************!*\
-  !*** ./src/useString/initialStore.js ***!
+  !*** ./src/useString/InitialStore.js ***!
   \***************************************/
 /*! exports provided: default */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
@@ -25628,124 +25591,43 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return initialStore; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _utils_assign__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/assign */ "./src/utils/assign.js");
-function _slicedToArray(arr, i) { return _arrayWithHoles(arr) || _iterableToArrayLimit(arr, i) || _nonIterableRest(); }
-
-function _nonIterableRest() { throw new TypeError("Invalid attempt to destructure non-iterable instance"); }
-
-function _iterableToArrayLimit(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"] != null) _i["return"](); } finally { if (_d) throw _e; } } return _arr; }
-
-function _arrayWithHoles(arr) { if (Array.isArray(arr)) return arr; }
-
-
-
-var globalVar = {};
-function initialStore(namespace, initialValue) {
-  if (initialValue !== undefined) {
-    globalVar[namespace] = initialValue;
-  }
-
-  var _useState = Object(react__WEBPACK_IMPORTED_MODULE_0__["useState"])(globalVar),
-      _useState2 = _slicedToArray(_useState, 2),
-      strings = _useState2[0],
-      setStrings = _useState2[1];
-
-  function setString(val) {
-    var temp = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(strings, namespace, val);
-    setStrings(temp);
-    return val;
-  }
-
-  function appendString(val) {
-    var temp = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(strings, namespace, strings[namespace] + val);
-    setStrings(temp);
-    return strings[namespace] + val;
-  }
-
-  function prependString(val) {
-    var temp = Object(_utils_assign__WEBPACK_IMPORTED_MODULE_1__["assignOne"])(strings, namespace, val + strings[namespace]);
-    setStrings(temp);
-    return val + strings[namespace];
-  }
-
-  function getString() {
-    return strings[namespace];
-  }
-
-  return {
-    string: getString(),
-    setString: setString,
-    appendString: appendString,
-    prependString: prependString
-  };
-}
-
-/***/ }),
-
-/***/ "./src/useString/useStore.js":
-/*!***********************************!*\
-  !*** ./src/useString/useStore.js ***!
-  \***********************************/
-/*! exports provided: default */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return useStore; });
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _initialStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./initialStore */ "./src/useString/initialStore.js");
-/* harmony import */ var _utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/namespaceParse */ "./src/utils/namespaceParse.js");
-/* harmony import */ var _utils_checkType__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ../utils/checkType */ "./src/utils/checkType.js");
+/* harmony import */ var _utils_namespaceParse__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../utils/namespaceParse */ "./src/utils/namespaceParse.js");
+/* harmony import */ var _utils_checkType__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../utils/checkType */ "./src/utils/checkType.js");
+/* harmony import */ var iostore__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! iostore */ "./node_modules/iostore/src/index.js");
 
 
 
 
 var initialValues = {};
-function useStore(namespace, initialValue) {
-  namespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_2__["namespaceParse"])(namespace);
+function initialStore(initialNamespace, initialValue) {
+  initialNamespace = Object(_utils_namespaceParse__WEBPACK_IMPORTED_MODULE_1__["namespaceParse"])(initialNamespace);
 
   if (initialValue !== undefined) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkString"])(initialValue);
-    initialValues[namespace] || (initialValues[namespace] = initialValue);
+    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_2__["checkString"])(initialValue);
+    initialValues[initialNamespace] || (initialValues[initialNamespace] = initialValue);
+    Object(iostore__WEBPACK_IMPORTED_MODULE_3__["createStore"])({
+      namespace: initialNamespace,
+      value: initialValue,
+      set: function set(val) {
+        this.value = val;
+      },
+      reset: function reset() {
+        this.value = initialValues[initialNamespace];
+      },
+      reInitial: function reInitial(value) {
+        initialValues[initialNamespace] = value;
+        this.value = value;
+      },
+      append: function append(val) {
+        this.value += val;
+      },
+      prepend: function prepend(val) {
+        this.value = val + this.value;
+      }
+    });
   }
 
-  var _initialStore = Object(_initialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
-      string = _initialStore.string,
-      setString = _initialStore.setString,
-      appendString = _initialStore.appendString,
-      prependString = _initialStore.prependString;
-
-  function set(value) {
-    Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkString"])(value);
-    return setString(value);
-  }
-
-  function reset() {
-    return setString(initialValues[namespace]);
-  }
-
-  function reInitial(value) {
-    initialValues[namespace] = value;
-    return setString(value);
-  }
-
-  function append(value) {
-    return appendString(value);
-  }
-
-  function prepend(value) {
-    return prependString(value);
-  }
-
-  return {
-    value: string,
-    set: set,
-    reset: reset,
-    reInitial: reInitial,
-    append: append,
-    prepend: prepend
-  };
+  return iostore__WEBPACK_IMPORTED_MODULE_3__["default"][initialNamespace];
 }
 
 /***/ }),
@@ -25762,17 +25644,17 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "useString", function() { return useString; });
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
 /* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var _useStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./useStore */ "./src/useString/useStore.js");
+/* harmony import */ var _InitialStore__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./InitialStore */ "./src/useString/InitialStore.js");
 
 
 function useString(namespace, initialValue) {
-  var _useStore = Object(_useStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
-      value = _useStore.value,
-      set = _useStore.set,
-      reset = _useStore.reset,
-      reInitial = _useStore.reInitial,
-      append = _useStore.append,
-      prepend = _useStore.prepend;
+  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
+      value = _InitialStore.value,
+      set = _InitialStore.set,
+      reset = _InitialStore.reset,
+      reInitial = _InitialStore.reInitial,
+      append = _InitialStore.append,
+      prepend = _InitialStore.prepend;
 
   return {
     value: value,
@@ -25782,28 +25664,6 @@ function useString(namespace, initialValue) {
     append: append,
     prepend: prepend
   };
-}
-
-/***/ }),
-
-/***/ "./src/utils/assign.js":
-/*!*****************************!*\
-  !*** ./src/utils/assign.js ***!
-  \*****************************/
-/*! exports provided: assign, assignOne */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-__webpack_require__.r(__webpack_exports__);
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "assign", function() { return assign; });
-/* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "assignOne", function() { return assignOne; });
-function _defineProperty(obj, key, value) { if (key in obj) { Object.defineProperty(obj, key, { value: value, enumerable: true, configurable: true, writable: true }); } else { obj[key] = value; } return obj; }
-
-function assign(target, items) {
-  return Object.assign({}, target, items);
-}
-function assignOne(target, key, value) {
-  return Object.assign({}, target, _defineProperty({}, key, value));
 }
 
 /***/ }),
@@ -25931,23 +25791,12 @@ __webpack_require__.r(__webpack_exports__);
 function Dom(props) {
   // const test = useBoolean('test', true);
   // const test2 = useNumber('test', 22);
-  var test = Object(_src_index__WEBPACK_IMPORTED_MODULE_1__["useMap"])('test', {
-    'test1': '123',
-    'test2': '123',
-    'test3': '123'
-  });
-  var test2 = Object(_src_index__WEBPACK_IMPORTED_MODULE_1__["useMap"])('test2', {
-    'test2': '123'
-  }); // const test = useArray('test', [23]);
+  var test = Object(_src_index__WEBPACK_IMPORTED_MODULE_1__["useArray"])('test', [1, 2, 3]); // const test = useArray('test', [23]);
   // const test = useString('test', '2');
 
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, JSON.stringify(test.value), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), JSON.stringify(test2.value), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, JSON.stringify(test.value), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: function onClick() {
-      return test.set('sdfsdf', 'ddddddd');
-    }
-  }, "Toggle"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
-    onClick: function onClick() {
-      return test2.set('11', '11');
+      return test.splice(0, 0, 'sdfsdf', 'ss');
     }
   }, "Toggle"));
 }
@@ -25972,7 +25821,11 @@ __webpack_require__.r(__webpack_exports__);
 function Dom2(props) {
   // const test = useBoolean('test');
   var test2 = Object(_src_index__WEBPACK_IMPORTED_MODULE_1__["useMap"])('test');
-  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, JSON.stringify(test2.value)));
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, JSON.stringify(test2.value)), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: function onClick() {
+      return test2.set('11111', '333333');
+    }
+  }, "Toggle2"));
 }
 
 /***/ }),

@@ -1,6 +1,6 @@
 {
     "name": "react-hooks-easy",
-    "version": "1.0.8",
+    "version": "1.0.9",
     "description": "Easy use hooks and data linkage",
     "main": "src/index.js",
     "scripts": {
@@ -28,6 +28,7 @@
     },
     "homepage": "https://github.com/yybawang/react-hooks-easy#readme",
     "dependencies": {
+        "iostore": "0.0.5",
         "react": "^16.8.6",
         "react-dom": "^16.8.6"
     },
