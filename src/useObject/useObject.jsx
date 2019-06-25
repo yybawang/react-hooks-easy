@@ -2,7 +2,7 @@ import React from 'react'
 import InitialStore from "./InitialStore";
 
 export function useObject(namespace, initialValue){
-    const {value, add, reset, reInitial, del, splice} = InitialStore(namespace, initialValue);
+    const {value, add, reset, reInitial, del, splice} = InitialStore('object_'+namespace, initialValue);
     
     return {
         value,
