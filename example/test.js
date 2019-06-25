@@ -25252,7 +25252,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function useArray(namespace, initialValue) {
-  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
+  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])('array_' + namespace, initialValue),
       value = _InitialStore.value,
       add = _InitialStore.add,
       reset = _InitialStore.reset,
@@ -25349,7 +25349,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function useBoolean(namespace, initialValue) {
-  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
+  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])('boolean_' + namespace, initialValue),
       value = _InitialStore.value,
       set = _InitialStore.set,
       reset = _InitialStore.reset,
@@ -25437,7 +25437,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function useNumber(namespace, initialValue) {
-  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
+  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])('number_' + namespace, initialValue),
       value = _InitialStore.value,
       set = _InitialStore.set,
       reset = _InitialStore.reset,
@@ -25554,7 +25554,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function useObject(namespace, initialValue) {
-  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
+  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])('object_' + namespace, initialValue),
       value = _InitialStore.value,
       add = _InitialStore.add,
       reset = _InitialStore.reset,
@@ -25648,7 +25648,7 @@ __webpack_require__.r(__webpack_exports__);
 
 
 function useString(namespace, initialValue) {
-  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])(namespace, initialValue),
+  var _InitialStore = Object(_InitialStore__WEBPACK_IMPORTED_MODULE_1__["default"])('string_' + namespace, initialValue),
       value = _InitialStore.value,
       set = _InitialStore.set,
       reset = _InitialStore.reset,
