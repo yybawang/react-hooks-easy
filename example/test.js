@@ -25398,20 +25398,24 @@ function initialStore(initialNamespace, initialValue) {
       namespace: initialNamespace,
       value: initialValue,
       set: function set(val) {
-        this.value = val;
+        Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_2__["checkNumber"])(val);
+        this.value = Number(val);
       },
       reset: function reset() {
         this.value = initialValues[initialNamespace];
       },
       reInitial: function reInitial(value) {
-        initialValues[initialNamespace] = value;
+        Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_2__["checkNumber"])(value);
+        initialValues[initialNamespace] = Number(value);
         this.value = value;
       },
       increment: function increment(val) {
-        this.value += val;
+        Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_2__["checkNumber"])(val);
+        this.value += Number(val);
       },
       decrement: function decrement(val) {
-        this.value -= val;
+        Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_2__["checkNumber"])(val);
+        this.value -= Number(val);
       }
     });
   }
@@ -25791,12 +25795,16 @@ __webpack_require__.r(__webpack_exports__);
 function Dom(props) {
   // const test = useBoolean('test', true);
   // const test2 = useNumber('test', 22);
-  var test = Object(_src_index__WEBPACK_IMPORTED_MODULE_1__["useArray"])('test', [1, 2, 3]); // const test = useArray('test', [23]);
+  var test = Object(_src_index__WEBPACK_IMPORTED_MODULE_1__["useNumber"])('test', '22'); // const test = useArray('test', [23]);
   // const test = useString('test', '2');
 
   return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, JSON.stringify(test.value), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: function onClick() {
-      return test.splice(0, 0, 'sdfsdf', 'ss');
+      return test.set('33');
+    }
+  }, "Toggle"), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
+    onClick: function onClick() {
+      return test.inc('33');
     }
   }, "Toggle"));
 }

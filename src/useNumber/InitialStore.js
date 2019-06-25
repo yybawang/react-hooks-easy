@@ -15,20 +15,24 @@ export default function initialStore(initialNamespace, initialValue){
             namespace: initialNamespace,
             value: initialValue,
             set(val){
-                this.value = val;
+                checkNumber(val);
+                this.value = Number(val);
             },
             reset(){
                 this.value = initialValues[initialNamespace];
             },
             reInitial(value){
-                initialValues[initialNamespace] = value;
+                checkNumber(value);
+                initialValues[initialNamespace] = Number(value);
                 this.value = value
             },
             increment(val){
-                this.value += val;
+                checkNumber(val);
+                this.value += Number(val);
             },
             decrement(val){
-                this.value -= val;
+                checkNumber(val);
+                this.value -= Number(val);
             }
         });
     }
