@@ -1,5 +1,6 @@
-## react-hooks-easy
+# react-hooks-easy
 
+> 封装了每种变量类型统一的增删改查API，为hooks 增加订阅模式，方便组件通信
 
 ### 概述
 一个管理 hooks 的工具，String、Array、Boolean、Number、Object hooks变量的增删改查封装
