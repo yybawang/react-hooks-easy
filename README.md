@@ -2,18 +2,19 @@
 
 
 ### 概述
-一個管理 hooks 的工具，String、Array、Boolean、Number、Object hooks變量的增刪改查封裝
+一个管理 hooks 的工具，String、Array、Boolean、Number、Object hooks变量的增删改查封装
 
-### 安裝
+### 安装
 ```
 npm i react-hooks-easy
 ```
 
-此工具共暴露5個API，對應5鍾數據類型
+此工具共暴露5个API，对应5种数据类型
+
 1. useBoolean
 2. useNumber
-3. useArray  alias: useList
-4. useObject alias: useMap
+3. useArray  (alias: useList)
+4. useObject (alias: useMap)
 5. useString
 
 ### Example
@@ -22,8 +23,8 @@ npm i react-hooks-easy
 import {useBoolean} from 'react-hooks-easy'
 
 export default function Initial(props) {
-    // 聲明一個命名空間為 test 的初始值為 false
-    // testBoolean 為自定義變量，可隨意命名
+    // 声明一个命名空间为 test 的初始值为 false
+    // testBoolean 为自定义变量，可随意命名
     const testBoolean = useBoolean('test', false);
     
     return (
@@ -34,16 +35,16 @@ export default function Initial(props) {
     )
 }
 
-// 只要命名空間相同，變量就是共享的，這也是我做這個工具的初衷
-// 組件之間不需要有什麼關係，這是變量共享
-// 所以可以在另一個組件裡獲取其他組件的 hooks 改動
+// 只要命名空间相同，变量就是共享的，这也是我做这个工具的初衷
+// 组件之间不需要有什么关系，这是变量共享
+// 所以可以在另一个组件里获取其他组件的 hooks 改动
 export default (props) => {
-    // 聲明命名空間為 test，第二個參數無，即不用初始化(其他組件初始過了)
+    // 声明命名空间为 test，第二个参数无，即不用初始化(其他组件初始过了)
     const testBoolean = useBoolean('test');
     return (
             <div>
                 <div>{testBoolean.value ? 'true' : 'false'}</div>
-                <button onClick={() => testBoolean.toggle()}>這裡也可以改變值</button>
+                <button onClick={() => testBoolean.toggle()}>这里也可以改变值</button>
             </div>
         )
 }
@@ -52,66 +53,66 @@ export default (props) => {
 
 ### 可用API
 #### 1、useBoolean
-| 屬性   |      說明      |  類型  | 屬性參數 | 默認值
+| 属性   |      说明      |  类型  | 属性参数 | 默认值
 |----------|:-------------| :------| :--- | :---|
 | value |  值 | boolean |  | [自填初始值] |
-| set |  設置值 | func(val) |  |  |
-| reset |  還原開始的初始值 | func() | 無參數 |  |
-| reInitial |  重新賦值(通用API，所有接口都實現了此方法，用於Array/Object批量賦值) | func(val) | val:boolean |  |
-| toggle |  切換 true/false | func() | 無參數 |  |
+| set |  设置值 | func(val) |  |  |
+| reset |  还原开始的初始值 | func() | 无参数 |  |
+| reInitial |  重新赋值(通用API，所有接口都实现了此方法，用于Array/Object批量赋值) | func(val) | val:boolean |  |
+| toggle |  切换 true/false | func() | 无参数 |  |
 
 #### 2、useNumber
-| 屬性   |      說明      |  類型  | 屬性參數 | 默認值
+| 属性   |      说明      |  类型  | 属性参数 | 默认值
 |----------|:-------------| :------| :--- | :---|
 | value |  值 | boolean |  | [自填初始值] |
-| set |  設置值 | func(val) |  |  |
-| reset |  還原開始的初始值 | func() | 無參數 |  |
-| reInitial |  重新賦值(通用API，所有接口都實現了此方法，用於Array/Object批量賦值) | func(val) | val:boolean |  |
-| increment |  自增 | func(count) | count: 自增數 | 1 |
-| inc |  increment 別名 | func(count) | count: 自增數 | 1 |
-| decrement |  自減 | func(count) | count: 自減數 | 1 |
-| dec |  decrement 別名 | func(count) | count: 自減數 | 1 |
+| set |  设置值 | func(val) |  |  |
+| reset |  还原开始的初始值 | func() | 无参数 |  |
+| reInitial |  重新赋值(通用API，所有接口都实现了此方法，用于Array/Object批量赋值) | func(val) | val:boolean |  |
+| increment |  自增 | func(count) | count: 自增数 | 1 |
+| inc |  increment 别名 | func(count) | count: 自增数 | 1 |
+| decrement |  自减 | func(count) | count: 自减数 | 1 |
+| dec |  decrement 别名 | func(count) | count: 自减数 | 1 |
 
 #### 3、useArray
-| 屬性   |      說明      |  類型  | 屬性參數 | 默認值
+| 属性   |      说明      |  类型  | 属性参数 | 默认值
 |----------|:-------------| :------| :--- | :---|
 | value |  值 | boolean |  | [自填初始值] |
-| add |  在數組指定位置添加一個值 | func(index, val) |  |  |
-| set |  add 別名 | func(index, val) |  |  |
-| reset |  還原開始的初始值 | func() | 無參數 |  |
-| reInitial |  重新賦值(通用API，所有接口都實現了此方法，用於Array/Object批量賦值) | func(val) | val:boolean |  |
+| add |  在数组指定位置添加一个值 | func(index, val) |  |  |
+| set |  add 别名 | func(index, val) |  |  |
+| reset |  还原开始的初始值 | func() | 无参数 |  |
+| reInitial |  重新赋值(通用API，所有接口都实现了此方法，用于Array/Object批量赋值) | func(val) | val:boolean |  |
 | push |  追加 | func(val) |  |  |
 | append |  追加 | func(val) |  |  |
-| unshift |  在數組頭追加 | func(val) |  |  |
-| prepend |  unshift 別名 | func(val) |  |  |
-| del |  刪除指定位置元素 | func(index) |  index: 索引位置 |  |
-| splice |  同js數組方法 | func(index, length, ...values) |  index: 開始位置，length:刪除長度，...values: 追加的元素(一/多個) |  |
+| unshift |  在数组头追加 | func(val) |  |  |
+| prepend |  unshift 别名 | func(val) |  |  |
+| del |  删除指定位置元素 | func(index) |  index: 索引位置 |  |
+| splice |  同js数组方法 | func(index, length, ...values) |  index: 开始位置，length:删除长度，...values: 追加的元素(一/多个) |  |
 
 #### 4、useObject
-| 屬性   |      說明      |  類型  | 屬性參數 | 默認值
+| 属性   |      说明      |  类型  | 属性参数 | 默认值
 |----------|:-------------| :------| :--- | :---|
 | value |  值 | boolean |  | [自填初始值] |
-| add |  在數組指定位置添加一個值 | func(index, val) |  |  |
-| set |  add 別名 | func(index, val) |  |  |
-| reset |  還原開始的初始值 | func() | 無參數 |  |
-| reInitial |  重新賦值(通用API，所有接口都實現了此方法，用於Array/Object批量賦值) | func(val) | val:boolean |  |
-| del |  刪除指定位置元素 | func(index) |  index: 索引位置 |  |
-| splice |  擴展自js數組方法，可在對象任意位置添加元素 | func(index, length, values) |  index: 開始位置，length:刪除長度，values: 對象 |   |
+| add |  在数组指定位置添加一个值 | func(index, val) |  |  |
+| set |  add 别名 | func(index, val) |  |  |
+| reset |  还原开始的初始值 | func() | 无参数 |  |
+| reInitial |  重新赋值(通用API，所有接口都实现了此方法，用于Array/Object批量赋值) | func(val) | val:boolean |  |
+| del |  删除指定位置元素 | func(index) |  index: 索引位置 |  |
+| splice |  扩展自js数组方法，可在对象任意位置添加元素 | func(index, length, values) |  index: 开始位置，length:删除长度，values: 对象 |   |
 ```
-// 對象的 splice 不同於數組的 splice，這裡固定三個參數 
+// 对象的 splice 不同于数组的 splice，这里固定三个参数 
 // splice 示例
 splice(0,1, {test: 'test'});
-// 多個對象元素，在第三個參數中放在一起
+// 多个对象元素，在第三个参数中放在一起
 splice(0,1, {test: 'test', test2: 'test2'});
 ```
 
 #### 5、useString
-| 屬性   |      說明      |  類型  | 屬性參數 | 默認值
+| 属性   |      说明      |  类型  | 属性参数 | 默认值
 |----------|:-------------| :------| :--- | :---|
 | value |  值 | boolean |  | [自填初始值] |
-| set |  設置值 | func(val) |  |  |
-| reset |  還原開始的初始值 | func() | 無參數 |  |
-| reInitial |  重新賦值(通用API，所有接口都實現了此方法，用於Array/Object批量賦值) | func(val) | val:boolean |  |
+| set |  设置值 | func(val) |  |  |
+| reset |  还原开始的初始值 | func() | 无参数 |  |
+| reInitial |  重新赋值(通用API，所有接口都实现了此方法，用于Array/Object批量赋值) | func(val) | val:boolean |  |
 | append |  追加字符串 | func(val) |  |  |
-| prepend |  在開頭追加字符串 | func(val) |  |  |
+| prepend |  在开头追加字符串 | func(val) |  |  |
 
