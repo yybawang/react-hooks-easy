@@ -51,6 +51,29 @@ export default (props) => {
 }
 ```
 
+### 增删改查使用 async/await 或 promise 示例
+
+> 反正你只要能返回就对了，内部已经把 promise 转为 await，保证异步promise也能接收返回值
+
+```
+const testNumber = useNumber('test');
+<button onClick={() => testNumber.set(async () => {
+    let res = await fetch('https://randomuser.me/api/');
+    let user = await res.json();
+    return user.info.version;
+})}>用async/await改变值</button>
+
+// 示例2 axios
+<button onClick={() => testNumber.set(async () => await axios('https://randomuser.me/api/'))}>用async/await改变值</button>
+
+// 示例3 使用 promise
+<button onClick={() => testNumber.set(() => 
+    fetch('https://randomuser.me/api/').then(response => response.json()).then((data) => {
+        return data.info.page;
+    })
+)}>Promise</button>
+```
+
 
 ### 可用API
 #### 1、useBoolean
@@ -116,4 +139,7 @@ splice(0,1, {test: 'test', test2: 'test2'});
 | reInitial |  重新赋值(通用API，所有接口都实现了此方法，用于Array/Object批量赋值) | func(val) | val:boolean |  |
 | append |  追加字符串 | func(val) |  |  |
 | prepend |  在开头追加字符串 | func(val) |  |  |
+| replace |  搜索并替换字符串 | func(search, ?replace) | replace默认空字符串 |  |
+| substring |  字符串截取，同 js 方法 | func(start, ?end) |  |  |
+| substr |  字符串截取，同 js 方法(类PHP) | func(start, ?length) |  |  |
 

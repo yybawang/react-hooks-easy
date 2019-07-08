@@ -27,6 +27,13 @@ export function checkUndefined(value){
     checkType(value, 'undefined');
 }
 
+export function checkFunction(value){
+    checkType(value, 'function');
+}
+export function checkFunc(value){
+    checkFunction(value);
+}
+
 function checkType(value, type){
     if(typeof value !== type){
         throw new Error('The initial value is not a '+type+' type');

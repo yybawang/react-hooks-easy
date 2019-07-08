@@ -2,6 +2,7 @@ import React from 'react'
 import {namespaceParse} from "../utils/namespaceParse";
 import {checkBoolean} from "../utils/checkType";
 import store, {createStore} from 'iostore'
+import {isFunction} from "iostore/src/util";
 
 let initialValues = {};
 export default function initialStore(initialNamespace, initialValue){
@@ -13,15 +14,19 @@ export default function initialStore(initialNamespace, initialValue){
         createStore({
             namespace: initialNamespace,
             value: initialValue,
-            set(val){
+            async set(val){
+                val = isFunction(val) ? await val() : val;
+                checkBoolean(val);
                 this.value = val;
             },
             reset(){
                 this.value = initialValues[initialNamespace];
             },
-            reInitial(value){
-                initialValues[initialNamespace] = value;
-                this.value = value
+            async reInitial(val){
+                val = isFunction(val) ? await val() : val;
+                checkBoolean(val);
+                initialValues[initialNamespace] = val;
+                this.value = val
             },
             toggle(){
                 this.value = !this.value;
