@@ -25961,32 +25961,49 @@ function initialStore(initialNamespace, initialValue) {
       add: function () {
         var _add = _asyncToGenerator(
         /*#__PURE__*/
-        _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(key, val) {
+        _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee(key) {
+          var val,
+              _args = arguments;
           return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
             while (1) {
               switch (_context.prev = _context.next) {
                 case 0:
-                  if (!Object(iostore_src_util__WEBPACK_IMPORTED_MODULE_5__["isFunction"])(val)) {
-                    _context.next = 6;
+                  val = _args.length > 1 && _args[1] !== undefined ? _args[1] : undefined;
+
+                  if (!(typeof val === "undefined")) {
+                    _context.next = 5;
                     break;
                   }
 
-                  _context.next = 3;
-                  return val();
-
-                case 3:
-                  _context.t0 = _context.sent;
-                  _context.next = 7;
+                  this.value.push(key);
+                  _context.next = 14;
                   break;
 
-                case 6:
+                case 5:
+                  if (!Object(iostore_src_util__WEBPACK_IMPORTED_MODULE_5__["isFunction"])(val)) {
+                    _context.next = 11;
+                    break;
+                  }
+
+                  _context.next = 8;
+                  return val();
+
+                case 8:
+                  _context.t0 = _context.sent;
+                  _context.next = 12;
+                  break;
+
+                case 11:
                   _context.t0 = val;
 
-                case 7:
+                case 12:
                   val = _context.t0;
                   this.value[key] = val;
 
-                case 9:
+                case 14:
+                  return _context.abrupt("return", this.value);
+
+                case 15:
                 case "end":
                   return _context.stop();
               }
@@ -25994,7 +26011,7 @@ function initialStore(initialNamespace, initialValue) {
           }, _callee, this);
         }));
 
-        function add(_x, _x2) {
+        function add(_x) {
           return _add.apply(this, arguments);
         }
 
@@ -26002,6 +26019,7 @@ function initialStore(initialNamespace, initialValue) {
       }(),
       reset: function reset() {
         this.value = _toConsumableArray(initialValues[initialNamespace]);
+        return this.value;
       },
       reInitial: function () {
         var _reInitial = _asyncToGenerator(
@@ -26032,8 +26050,9 @@ function initialStore(initialNamespace, initialValue) {
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkArray"])(val);
                   initialValues[initialNamespace] = _toConsumableArray(val);
                   this.value = val;
+                  return _context2.abrupt("return", this.value);
 
-                case 11:
+                case 12:
                 case "end":
                   return _context2.stop();
               }
@@ -26041,7 +26060,7 @@ function initialStore(initialNamespace, initialValue) {
           }, _callee2, this);
         }));
 
-        function reInitial(_x3) {
+        function reInitial(_x2) {
           return _reInitial.apply(this, arguments);
         }
 
@@ -26077,8 +26096,9 @@ function initialStore(initialNamespace, initialValue) {
                 case 7:
                   val = _context3.t0;
                   this.value.push(val);
+                  return _context3.abrupt("return", this.value);
 
-                case 9:
+                case 10:
                 case "end":
                   return _context3.stop();
               }
@@ -26086,7 +26106,7 @@ function initialStore(initialNamespace, initialValue) {
           }, _callee3, this);
         }));
 
-        function push(_x4) {
+        function push(_x3) {
           return _push.apply(this, arguments);
         }
 
@@ -26128,7 +26148,7 @@ function initialStore(initialNamespace, initialValue) {
           }, _callee4, this);
         }));
 
-        function unshift(_x5) {
+        function unshift(_x4) {
           return _unshift.apply(this, arguments);
         }
 
@@ -26142,6 +26162,8 @@ function initialStore(initialNamespace, initialValue) {
         }
 
         (_this$value = this.value).splice.apply(_this$value, [index, length].concat(value));
+
+        return this.value;
       }
     });
   }
@@ -26266,8 +26288,9 @@ function initialStore(initialNamespace, initialValue) {
                   val = _context.t0;
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkBoolean"])(val);
                   this.value = val;
+                  return _context.abrupt("return", this.value);
 
-                case 10:
+                case 11:
                 case "end":
                   return _context.stop();
               }
@@ -26283,6 +26306,7 @@ function initialStore(initialNamespace, initialValue) {
       }(),
       reset: function reset() {
         this.value = initialValues[initialNamespace];
+        return this.value;
       },
       reInitial: function () {
         var _reInitial = _asyncToGenerator(
@@ -26313,8 +26337,9 @@ function initialStore(initialNamespace, initialValue) {
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkBoolean"])(val);
                   initialValues[initialNamespace] = val;
                   this.value = val;
+                  return _context2.abrupt("return", this.value);
 
-                case 11:
+                case 12:
                 case "end":
                   return _context2.stop();
               }
@@ -26330,6 +26355,7 @@ function initialStore(initialNamespace, initialValue) {
       }(),
       toggle: function toggle() {
         this.value = !this.value;
+        return this.value;
       }
     });
   }
@@ -26441,8 +26467,9 @@ function initialStore(initialNamespace, initialValue) {
                   val = _context.t0;
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkNumber"])(val);
                   this.value = Number(val);
+                  return _context.abrupt("return", this.value);
 
-                case 10:
+                case 11:
                 case "end":
                   return _context.stop();
               }
@@ -26458,6 +26485,7 @@ function initialStore(initialNamespace, initialValue) {
       }(),
       reset: function reset() {
         this.value = initialValues[initialNamespace];
+        return this.value;
       },
       reInitial: function () {
         var _reInitial = _asyncToGenerator(
@@ -26488,8 +26516,9 @@ function initialStore(initialNamespace, initialValue) {
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkNumber"])(val);
                   initialValues[initialNamespace] = Number(val);
                   this.value = val;
+                  return _context2.abrupt("return", this.value);
 
-                case 11:
+                case 12:
                 case "end":
                   return _context2.stop();
               }
@@ -26531,8 +26560,9 @@ function initialStore(initialNamespace, initialValue) {
                   val = _context3.t0;
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkNumber"])(val);
                   this.value += Number(val);
+                  return _context3.abrupt("return", this.value);
 
-                case 10:
+                case 11:
                 case "end":
                   return _context3.stop();
               }
@@ -26574,8 +26604,9 @@ function initialStore(initialNamespace, initialValue) {
                   val = _context4.t0;
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkNumber"])(val);
                   this.value -= Number(val);
+                  return _context4.abrupt("return", this.value);
 
-                case 10:
+                case 11:
                 case "end":
                   return _context4.stop();
               }
@@ -26713,8 +26744,9 @@ function initialStore(initialNamespace, initialValue) {
                 case 7:
                   val = _context.t0;
                   this.value[key] = val;
+                  return _context.abrupt("return", this.value);
 
-                case 9:
+                case 10:
                 case "end":
                   return _context.stop();
               }
@@ -26730,6 +26762,7 @@ function initialStore(initialNamespace, initialValue) {
       }(),
       reset: function reset() {
         this.value = _objectSpread({}, initialValues[initialNamespace]);
+        return this.value;
       },
       reInitial: function () {
         var _reInitial = _asyncToGenerator(
@@ -26760,8 +26793,9 @@ function initialStore(initialNamespace, initialValue) {
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkObject"])(val);
                   initialValues[initialNamespace] = _objectSpread({}, val);
                   this.value = val;
+                  return _context2.abrupt("return", this.value);
 
-                case 11:
+                case 12:
                 case "end":
                   return _context2.stop();
               }
@@ -26777,6 +26811,7 @@ function initialStore(initialNamespace, initialValue) {
       }(),
       del: function del(key) {
         delete this.value[key];
+        return this.value;
       },
       // 擴展數組的splice方法，方便在對象中排序
       splice: function splice(index, length, value) {
@@ -26793,6 +26828,7 @@ function initialStore(initialNamespace, initialValue) {
         }
 
         this.value = temp2;
+        return this.value;
       }
     });
   }
@@ -26911,8 +26947,9 @@ function initialStore(initialNamespace, initialValue) {
                   val = _context.t0;
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkString"])(val);
                   this.value = val;
+                  return _context.abrupt("return", this.value);
 
-                case 10:
+                case 11:
                 case "end":
                   return _context.stop();
               }
@@ -26928,6 +26965,7 @@ function initialStore(initialNamespace, initialValue) {
       }(),
       reset: function reset() {
         this.value = initialValues[initialNamespace];
+        return this.value;
       },
       reInitial: function () {
         var _reInitial = _asyncToGenerator(
@@ -26957,8 +26995,9 @@ function initialStore(initialNamespace, initialValue) {
                   val = _context2.t0;
                   initialValues[initialNamespace] = val;
                   this.value = val;
+                  return _context2.abrupt("return", this.value);
 
-                case 10:
+                case 11:
                 case "end":
                   return _context2.stop();
               }
@@ -27000,8 +27039,9 @@ function initialStore(initialNamespace, initialValue) {
                   val = _context3.t0;
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkString"])(val);
                   this.value += val;
+                  return _context3.abrupt("return", this.value);
 
-                case 10:
+                case 11:
                 case "end":
                   return _context3.stop();
               }
@@ -27043,8 +27083,9 @@ function initialStore(initialNamespace, initialValue) {
                   val = _context4.t0;
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkString"])(val);
                   this.value = val + this.value;
+                  return _context4.abrupt("return", this.value);
 
-                case 10:
+                case 11:
                 case "end":
                   return _context4.stop();
               }
@@ -27090,8 +27131,9 @@ function initialStore(initialNamespace, initialValue) {
                   val = _context5.t0;
                   Object(_utils_checkType__WEBPACK_IMPORTED_MODULE_3__["checkString"])(val);
                   this.value = this.value.replace(search, val);
+                  return _context5.abrupt("return", this.value);
 
-                case 11:
+                case 12:
                 case "end":
                   return _context5.stop();
               }
@@ -27117,8 +27159,9 @@ function initialStore(initialNamespace, initialValue) {
                 case 0:
                   end = _args6.length > 1 && _args6[1] !== undefined ? _args6[1] : undefined;
                   this.value = this.value.substring(start, end);
+                  return _context6.abrupt("return", this.value);
 
-                case 2:
+                case 3:
                 case "end":
                   return _context6.stop();
               }
@@ -27144,8 +27187,9 @@ function initialStore(initialNamespace, initialValue) {
                 case 0:
                   length = _args7.length > 1 && _args7[1] !== undefined ? _args7[1] : undefined;
                   this.value = this.value.substr(start, length);
+                  return _context7.abrupt("return", this.value);
 
-                case 2:
+                case 3:
                 case "end":
                   return _context7.stop();
               }
@@ -27328,19 +27372,11 @@ function namespaceParse(namespace) {
 "use strict";
 __webpack_require__.r(__webpack_exports__);
 /* harmony export (binding) */ __webpack_require__.d(__webpack_exports__, "default", function() { return Dom; });
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! @babel/runtime/regenerator */ "./node_modules/@babel/runtime/regenerator/index.js");
-/* harmony import */ var _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(_babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0__);
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
-/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_1___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_1__);
-/* harmony import */ var _src_index__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ../src/index */ "./src/index.js");
-/* harmony import */ var _Dom2__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Dom2 */ "./test/Dom2.jsx");
-/* harmony import */ var _Dom3__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./Dom3 */ "./test/Dom3.jsx");
-
-
-function asyncGeneratorStep(gen, resolve, reject, _next, _throw, key, arg) { try { var info = gen[key](arg); var value = info.value; } catch (error) { reject(error); return; } if (info.done) { resolve(value); } else { Promise.resolve(value).then(_next, _throw); } }
-
-function _asyncToGenerator(fn) { return function () { var self = this, args = arguments; return new Promise(function (resolve, reject) { var gen = fn.apply(self, args); function _next(value) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "next", value); } function _throw(err) { asyncGeneratorStep(gen, resolve, reject, _next, _throw, "throw", err); } _next(undefined); }); }; }
-
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! react */ "./node_modules/react/index.js");
+/* harmony import */ var react__WEBPACK_IMPORTED_MODULE_0___default = /*#__PURE__*/__webpack_require__.n(react__WEBPACK_IMPORTED_MODULE_0__);
+/* harmony import */ var _src_index__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ../src/index */ "./src/index.js");
+/* harmony import */ var _Dom2__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! ./Dom2 */ "./test/Dom2.jsx");
+/* harmony import */ var _Dom3__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./Dom3 */ "./test/Dom3.jsx");
 
 
 
@@ -27349,59 +27385,22 @@ function Dom(props) {
   // const test = useBoolean('test', true);
   // const test2 = useNumber('test', 22);
   // const test = useNumber('test', '22');
-  // const test = useArray('test', [23]);
-  var test = Object(_src_index__WEBPACK_IMPORTED_MODULE_2__["useString"])('test', '2');
-  return react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("div", null, JSON.stringify(test.value), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("br", null), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-    onClick: function onClick() {
-      return test.set(function () {
-        return fetch('https://randomuser.me/api/').then(function (response) {
-          return response.json();
-        }).then(function (data) {
-          return data.info.seed;
-        });
+  var test = Object(_src_index__WEBPACK_IMPORTED_MODULE_1__["useArray"])('test', [23]); // const test = useString('test', '2');
+
+  Object(react__WEBPACK_IMPORTED_MODULE_0__["useEffect"])(function () {
+    function ss() {
+      var s = test.add(244).then(function (val) {
+        logger(val);
       });
     }
-  }, "Toggle"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-    onClick: function onClick() {
-      return test.set(
-      /*#__PURE__*/
-      _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var res, user;
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
-          while (1) {
-            switch (_context.prev = _context.next) {
-              case 0:
-                _context.next = 2;
-                return fetch('https://randomuser.me/api/');
 
-              case 2:
-                res = _context.sent;
-                _context.next = 5;
-                return res.json();
-
-              case 5:
-                user = _context.sent;
-                return _context.abrupt("return", user.info.version);
-
-              case 7:
-              case "end":
-                return _context.stop();
-            }
-          }
-        }, _callee);
-      })));
-    }
-  }, "Promise"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
+    ss();
+  }, []);
+  return react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("div", null, JSON.stringify(test), react__WEBPACK_IMPORTED_MODULE_0___default.a.createElement("button", {
     onClick: function onClick() {
-      return test.substring(4, 5);
+      logger(test.add(244));
     }
-  }, "Toggle"), react__WEBPACK_IMPORTED_MODULE_1___default.a.createElement("button", {
-    onClick: function onClick() {
-      return test.substr(4, 5);
-    }
-  }, "Toggle"));
+  }, "Add"));
 }
 
 /***/ }),

@@ -1,6 +1,6 @@
 {
     "name": "react-hooks-easy",
-    "version": "1.0.11",
+    "version": "1.0.12",
     "description": "Easy use hooks and data linkage",
     "main": "src/index.js",
     "scripts": {

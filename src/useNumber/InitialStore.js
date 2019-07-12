@@ -19,25 +19,30 @@ export default function initialStore(initialNamespace, initialValue){
                 val = isFunction(val) ? await val() : val;
                 checkNumber(val);
                 this.value = Number(val);
+                return this.value;
             },
             reset(){
                 this.value = initialValues[initialNamespace];
+                return this.value;
             },
             async reInitial(val){
                 val = isFunction(val) ? await val() : val;
                 checkNumber(val);
                 initialValues[initialNamespace] = Number(val);
                 this.value = val
+                return this.value;
             },
             async increment(val){
                 val = isFunction(val) ? await val() : val;
                 checkNumber(val);
                 this.value += Number(val);
+                return this.value;
             },
             async decrement(val){
                 val = isFunction(val) ? await val() : val;
                 checkNumber(val);
                 this.value -= Number(val);
+                return this.value;
             }
         });
     }

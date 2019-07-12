@@ -18,18 +18,22 @@ export default function initialStore(initialNamespace, initialValue){
                 val = isFunction(val) ? await val() : val;
                 checkBoolean(val);
                 this.value = val;
+                return this.value
             },
             reset(){
                 this.value = initialValues[initialNamespace];
+                return this.value;
             },
             async reInitial(val){
                 val = isFunction(val) ? await val() : val;
                 checkBoolean(val);
                 initialValues[initialNamespace] = val;
                 this.value = val
+                return this.value;
             },
             toggle(){
                 this.value = !this.value;
+                return this.value;
             }
         });
     }

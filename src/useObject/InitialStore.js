@@ -16,18 +16,22 @@ export default function initialStore(initialNamespace, initialValue){
             async add(key, val){
                 val = isFunction(val) ? await val() : val;
                 this.value[key] = val;
+                return this.value;
             },
             reset(){
                 this.value = {...initialValues[initialNamespace]};
+                return this.value;
             },
             async reInitial(val){
                 val = isFunction(val) ? await val() : val;
                 checkObject(val);
                 initialValues[initialNamespace] = {...val};
-                this.value = val
+                this.value = val;
+                return this.value;
             },
             del(key){
                 delete this.value[key];
+                return this.value;
             },
             // 擴展數組的splice方法，方便在對象中排序
             splice(index, length, value){
@@ -40,6 +44,7 @@ export default function initialStore(initialNamespace, initialValue){
                     temp2[temp_keys[i]] = temp_values[i];
                 }
                 this.value = temp2;
+                return this.value;
             },
         });
     }

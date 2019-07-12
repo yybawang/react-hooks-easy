@@ -74,6 +74,19 @@ const testNumber = useNumber('test');
 )}>Promise</button>
 ```
 
+### 默认变量更新是异步的，如果想及时获取到实时数据，可使用返回值的方式
+```
+// 返回值是 promise 可以使用 await
+async function sync(){
+    let res = await testNumber.inc(10);
+    // 打印出来有很多私有属性，不用管，res 已经是最新的值了，直接照常用就行了
+    console.log(res);
+}
+
+// 或者使用 then 的方式
+testNumber.inc(10).then(val => console.log(res))
+```
+
 
 ### 可用API
 #### 1、useBoolean

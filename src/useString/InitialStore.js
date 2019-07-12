@@ -18,35 +18,43 @@ export default function initialStore(initialNamespace, initialValue){
                 val = isFunction(val) ? await val() : val;
                 checkString(val);
                 this.value = val;
+                return this.value;
             },
             reset(){
                 this.value = initialValues[initialNamespace];
+                return this.value;
             },
             async reInitial(val){
                 val = isFunction(val) ? await val() : val;
                 initialValues[initialNamespace] = val;
                 this.value = val
+                return this.value;
             },
             async append(val){
                 val = isFunction(val) ? await val() : val;
                 checkString(val);
                 this.value += val;
+                return this.value;
             },
             async prepend(val){
                 val = isFunction(val) ? await val() : val;
                 checkString(val);
                 this.value = val + this.value;
+                return this.value;
             },
             async replace(search, val = ''){
                 val = isFunction(val) ? await val() : val;
                 checkString(val);
                 this.value = this.value.replace(search, val);
+                return this.value;
             },
             async substring(start, end = undefined){
                 this.value = this.value.substring(start, end);
+                return this.value;
             },
             async substr(start, length = undefined){
                 this.value = this.value.substr(start, length);
+                return this.value;
             }
         });
     }
