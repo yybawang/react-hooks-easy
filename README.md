@@ -114,12 +114,12 @@ testNumber.inc(10).then(val => console.log(res))
 | 属性   |      说明      |  类型  | 属性参数 | 默认值
 |----------|:-------------| :------| :--- | :---|
 | value |  值 | boolean |  | [自填初始值] |
-| add |  在数组指定位置添加一个值 | func(index, val) |  |  |
+| add |  在数组指定位置添加一个值 | func(index, val = undefined) |  如果没有第二个参数，则变身 push 方法 |  |
 | set |  add 别名 | func(index, val) |  |  |
 | reset |  还原开始的初始值 | func() | 无参数 |  |
 | reInitial |  重新赋值(通用API，所有接口都实现了此方法，用于Array/Object批量赋值) | func(val) | val:boolean |  |
 | push |  追加 | func(val) |  |  |
-| append |  追加 | func(val) |  |  |
+| append |  push 别名 | func(val) |  |  |
 | unshift |  在数组头追加 | func(val) |  |  |
 | prepend |  unshift 别名 | func(val) |  |  |
 | del |  删除指定位置元素 | func(index) |  index: 索引位置 |  |
