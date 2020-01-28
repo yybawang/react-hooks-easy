@@ -4,6 +4,7 @@
 .DS_Store
 mix-manifest.json
 *.log
+node_modules
 
 # IntelliJ project files
 .idea

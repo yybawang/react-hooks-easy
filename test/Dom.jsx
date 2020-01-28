@@ -12,17 +12,17 @@ export default function Dom(props){
     useEffect(() => {
         function ss(){
             let s = test.add(244).then(val => {
-                logger(val);
+                // console.log(val);
             });
         }
         ss();
-        
+
     }, []);
     return (
         <div>
             {JSON.stringify(test)}
             {}
-            <button onClick={() => {logger(test.add(244))}}>Add</button>
+            <button onClick={() => {console.log(test.add(244))}}>Add</button>
             {/*<button onClick={() => test.set('11')}>Toggle</button>*/}
             {/*<button onClick={() => test.add('test4', '11')}>Toggle</button>*/}
         </div>
